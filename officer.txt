@@ -1,0 +1,5 @@
+\n	President
+\n	Vice President
+\n	Treasurer
+\n	ICT Chair
+\n	Social Chair

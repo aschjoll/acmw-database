@@ -1,0 +1,6 @@
+\n	1234	snorman	123	Sydney	Norman	sydney.norman@uky.edu	4.0	0	1	4	1		1
+\n	2345	rconway	123	Robert	Conway	robert.conway@uky.edu	3.4	0	2	5	1		1
+\n	3456	aschjoll	123	Amberlyn	Schjoll	amberlyn.schjoll@uky.edu	2.8	1	1	3	1	2	1
+\n	4567	rsyamil	123	Raiffa	Syamil	raiffa.syamil@uky.edu	3.8	1	1	3	2	1	1
+\n	5678	cwest	123	Chelsea	West	chelsea.west@uky.edu	3.5	1	1	3	1	4	2
+\n	6789	acorwin	123	Adrienne	Corwin	adrienne.corwin@uky.edu	4.0	1	1	3	2	0	1

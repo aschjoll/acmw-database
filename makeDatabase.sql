@@ -22,9 +22,9 @@ create table student
 	foreign key (officerid) references officer(id),
 	foreign key (majorid) references major(id)
 	);
---load data local infile '/home/afco229/student.txt
---into table student
---fields terminated by '\t';
+load data local infile '/home/afco229/student.txt'
+into table student
+fields terminated by '\t';
 
 create table event
 	(
@@ -40,8 +40,8 @@ create table event
 	foreign key (locationid) references location(locationid)
 	);
 
----LOAD DATA LOCAL INFILE '/home/afco229/Downloads/forLab3/courses.txt'
----INTO TABLE courses
+---LOAD DATA LOCAL INFILE '/home/afco229/Downloads/forLab3/event.txt'
+---INTO TABLE event
 ---FIELDS TERMINATED BY '\t';
 
 create table location
@@ -51,6 +51,11 @@ create table location
 	room varchar(5),
 	address varchar(50),
 	);
+
+
+---LOAD DATA LOCAL INFILE '/home/afco229/Downloads/forLab3/location.txt'
+---INTO TABLE location
+---FIELDS TERMINATED BY '\t';
 
 create table attends
 	(
@@ -64,8 +69,8 @@ create table attends
 	foreign key (eventid) reference event(eventid)
 	);
 
----LOAD DATA LOCAL INFILE '/home/afco229/Downloads/forLab3/courses.txt'
----INTO TABLE courses
+---LOAD DATA LOCAL INFILE '/home/afco229/Downloads/forLab3/attends.txt'
+---INTO TABLE attends
 ---FIELDS TERMINATED BY '\t';	
 	
 create table faculty
@@ -80,8 +85,8 @@ create table faculty
 	foreign key (genderid) gender(id)
 	);
 
----LOAD DATA LOCAL INFILE '/home/afco229/Downloads/forLab3/courses.txt'
----INTO TABLE courses
+---LOAD DATA LOCAL INFILE '/home/afco229/Downloads/forLab3/faculty.txt'
+---INTO TABLE faculty
 ---FIELDS TERMINATED BY '\t'; 
 
 create table project
@@ -94,8 +99,8 @@ create table project
 	);
 
 
----LOAD DATA LOCAL INFILE '/home/afco229/Downloads/forLab3/courses.txt'
----INTO TABLE courses
+---LOAD DATA LOCAL INFILE '/home/afco229/Downloads/forLab3/project.txt'
+---INTO TABLE project
 ---FIELDS TERMINATED BY '\t'; 
 
 create table memberof
@@ -108,8 +113,8 @@ create table memberof
 	foreign key (project) references project(projectid)
 	);
 
----LOAD DATA LOCAL INFILE '/home/afco229/Downloads/forLab3/courses.txt'
----INTO TABLE courses
+---LOAD DATA LOCAL INFILE '/home/afco229/Downloads/forLab3/memberof.txt'
+---INTO TABLE memberof
 ---FIELDS TERMINATED BY '\t'; 
 
 create table research 
@@ -122,8 +127,8 @@ create table research
 	foreign key (sid) references student(sid)
 	);
 
----LOAD DATA LOCAL INFILE '/home/afco229/Downloads/forLab3/courses.txt'
----INTO TABLE courses
+---LOAD DATA LOCAL INFILE '/home/afco229/Downloads/forLab3/research.txt'
+---INTO TABLE research
 ---FIELDS TERMINATED BY '\t'; 
 
 
@@ -137,8 +142,8 @@ create table company
 	foreign key (sid) references student(sid)
 	);
 
----LOAD DATA LOCAL INFILE '/home/afco229/Downloads/forLab3/courses.txt'
----INTO TABLE courses
+---LOAD DATA LOCAL INFILE '/home/afco229/Downloads/forLab3/company.txt'
+---INTO TABLE company
 ---FIELDS TERMINATED BY '\t'; 
 
 create table gender
@@ -148,8 +153,8 @@ create table gender
 	);
 
 
----LOAD DATA LOCAL INFILE '/home/afco229/Downloads/forLab3/courses.txt'
----INTO TABLE courses
+---LOAD DATA LOCAL INFILE '/home/afco229/Downloads/forLab3/gender.txt'
+---INTO TABLE gender
 ---FIELDS TERMINATED BY '\t'; 
 
 create table officer
@@ -158,8 +163,8 @@ create table officer
 	title varchar(50) not null,
 	);
 
----LOAD DATA LOCAL INFILE '/home/afco229/Downloads/forLab3/courses.txt'
----INTO TABLE courses
+---LOAD DATA LOCAL INFILE '/home/afco229/Downloads/forLab3/officer.txt'
+---INTO TABLE officer
 ---FIELDS TERMINATED BY '\t'; 
 
 create table major
@@ -169,8 +174,8 @@ create table major
 	abbreviation varchar(3) not null,
 	);
 
----LOAD DATA LOCAL INFILE '/home/afco229/Downloads/forLab3/courses.txt'
----INTO TABLE courses
+---LOAD DATA LOCAL INFILE '/home/afco229/Downloads/forLab3/major.txt'
+---INTO TABLE major
 ---FIELDS TERMINATED BY '\t'; 
 
 create table race
@@ -180,6 +185,6 @@ create table race
 	hispanic boolean no null,
 	);
 
----LOAD DATA LOCAL INFILE '/home/afco229/Downloads/forLab3/courses.txt'
----INTO TABLE courses
+---LOAD DATA LOCAL INFILE '/home/afco229/Downloads/forLab3/race.txt'
+---INTO TABLE race
 ---FIELDS TERMINATED BY '\t'; 

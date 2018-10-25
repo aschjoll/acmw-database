@@ -1,0 +1,5 @@
+\n	Freshman
+\n	Sophomore
+\n	Junior
+\n	Senior
+\n	Super Senior
