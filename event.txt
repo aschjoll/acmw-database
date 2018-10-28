@@ -1,2 +1,2 @@
-\n	git and GitHub Workshop	2018-10-18 17:00:00	amberlyn led a workshop as an intro to git and GitHub	3456	2	1
-\n	General Meeting		2018-09-20 17:30:00	general meeting yo	4567	1	2	
+\n	git and GitHub Workshop	2018-10-18 17:00	amberlyn led a workshop as an intro to git and GitHub	3456	2	1
+\n	General Meeting		2018-09-20 17:30	general meeting yo	4567	1	2	
