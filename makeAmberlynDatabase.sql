@@ -6,7 +6,7 @@ create table year
           year varchar(10) not null
         );
 
-LOAD DATA LOCAL INFILE '/home/assc223/Desktop/acmw-database/year.txt'
+LOAD DATA LOCAL INFILE '/home/assc223/Desktop/acmw-database/textFiles/year.txt'
 INTO TABLE year
 FIELDS TERMINATED BY '\t';
 
@@ -16,7 +16,7 @@ create table gender
         gender varchar(10) not null
         );
 
-LOAD DATA LOCAL INFILE '/home/assc223/Desktop/acmw-database/gender.txt'
+LOAD DATA LOCAL INFILE '/home/assc223/Desktop/acmw-database/textFiles/gender.txt'
 INTO TABLE gender
 FIELDS TERMINATED BY '\t';
 
@@ -26,7 +26,7 @@ create table officer
         title varchar(50) not null
         );
 
-LOAD DATA LOCAL INFILE '/home/assc223/Desktop/acmw-database/officer.txt'
+LOAD DATA LOCAL INFILE '/home/assc223/Desktop/acmw-database/textFiles/officer.txt'
 INTO TABLE officer
 FIELDS TERMINATED BY '\t';
 
@@ -37,7 +37,7 @@ create table major
         abbreviation varchar(3) not null
         );
 
-LOAD DATA LOCAL INFILE '/home/assc223/Desktop/acmw-database/major.txt'
+LOAD DATA LOCAL INFILE '/home/assc223/Desktop/acmw-database/textFiles/major.txt'
 INTO TABLE major
 FIELDS TERMINATED BY '\t';
 
@@ -48,7 +48,7 @@ create table race
         hispanic boolean not null
         );
 
-LOAD DATA LOCAL INFILE '/home/assc223/Desktop/acmw-database/race.txt'
+LOAD DATA LOCAL INFILE '/home/assc223/Desktop/acmw-database/textFiles/race.txt'
 INTO TABLE race
 FIELDS TERMINATED BY '\t';
 
@@ -60,7 +60,7 @@ create table location
         address varchar(50)
         );
 
-LOAD DATA LOCAL INFILE '/home/assc223/Desktop/acmw-database/location.txt'
+LOAD DATA LOCAL INFILE '/home/assc223/Desktop/acmw-database/textFiles/location.txt'
 INTO TABLE location
 FIELDS TERMINATED BY '\t';
 
@@ -91,25 +91,24 @@ create table student
 	references major (majorid)
         );
 
-load data local infile '/home/assc223/Desktop/acmw-database/student.txt'
+load data local infile '/home/assc223/Desktop/acmw-database/textFiles/student.txt'
 into table student
 fields terminated by '\t';
-*/
+
 
 create table faculty
         (
-        facultyid int not null,
+        facultyid int not null primary key auto_increment,
         fname varchar(20) not null,
         lname varchar(20) not null,
         department varchar(20) not null,
         email varchar(50) not null,
-        genderid int not null
-        primary key (facultyid),
+        genderid int not null,
         foreign key (genderid)
-                reference gender(genderid)
+        references gender(genderid)
         );
 
-LOAD DATA LOCAL INFILE '/home/assc223/Desktop/acmw-database/faculty.txt'
+LOAD DATA LOCAL INFILE '/home/assc223/Desktop/acmw-database/textFiles/faculty.txt'
 INTO TABLE faculty
 FIELDS TERMINATED BY '\t';
 
@@ -119,11 +118,11 @@ create table project
         facultyid int not null,
         project varchar(100) not null,
         foreign key (facultyid) 
-		references faculty(id)
+	references faculty(facultyid)
         );
 
 
-LOAD DATA LOCAL INFILE '/home/assc223/Desktop/acmw-database/project.txt'
+LOAD DATA LOCAL INFILE '/home/assc223/Desktop/acmw-database/textFiles/project.txt'
 INTO TABLE project
 FIELDS TERMINATED BY '\t';
 
@@ -131,23 +130,23 @@ create table event
         (
         eventid int not null primary key auto_increment,
         event varchar(50) not null,
-	when datetime,
+	eventTime datetime not null,
 	description text not null,
         sid int not null,
         projectid int not null,
         locationid int not null,
         foreign key (sid) 
-		references student(sid),
+	references student(sid),
         foreign key (projectid) 
-		references project(projectid),
+	references project(projectid),
         foreign key (locationid) 
-		references location(locationid)
+	references location(locationid)
         );
 
-LOAD DATA LOCAL INFILE '/home/assc223/Desktop/acmw-database/event.txt'
+LOAD DATA LOCAL INFILE '/home/assc223/Desktop/acmw-database/textFiles/event.txt'
 INTO TABLE event
 FIELDS TERMINATED BY '\t';
-/*
+
 create table attends
         (
         sid int not null,
@@ -156,30 +155,30 @@ create table attends
         attend boolean not null,
         primary key (sid, eventid),
         foreign key(sid) 
-		references student(sid),
+	references student(sid),
         foreign key (eventid) 
-		reference event(eventid)
+	references event(eventid)
         );
 
-LOAD DATA LOCAL INFILE '/home/assc223/Desktop/acmw-database/attends.txt'
+LOAD DATA LOCAL INFILE '/home/assc223/Desktop/acmw-database/textFiles/attends.txt'
 INTO TABLE attends
 FIELDS TERMINATED BY '\t';
-
+*/
 create table memberof
         (
         sid int not null,
         projectid int not null,
         primary key (sid, projectid),
         foreign key (sid) 
-		references student(sid),
-        foreign key (project) 
-		references project(projectid)
+	references student(sid),
+        foreign key (projectid) 
+	references project(projectid)
         );
 
-LOAD DATA LOCAL INFILE '/home/assc223/Desktop/acmw-database/memberof.txt'
+LOAD DATA LOCAL INFILE '/home/assc223/Desktop/acmw-database/textFiles/memberof.txt'
 INTO TABLE memberof
 FIELDS TERMINATED BY '\t';
-
+/*
 create table research
         (
         sid int not null,
@@ -190,7 +189,7 @@ create table research
 		references student(sid)
         );
 
-LOAD DATA LOCAL INFILE '/home/assc223/Desktop/acmw-database/research.txt'
+LOAD DATA LOCAL INFILE '/home/assc223/Desktop/acmw-database/textFiles/research.txt'
 INTO TABLE research
 FIELDS TERMINATED BY '\t';
 
@@ -204,6 +203,6 @@ create table company
 		references student(sid)
         );
 
-LOAD DATA LOCAL INFILE '/home/assc223/Desktop/acmw-database/company.txt'
+LOAD DATA LOCAL INFILE '/home/assc223/Desktop/acmw-database/textFiles/company.txt'
 INTO TABLE company
 FIELDS TERMINATED BY '\t';
