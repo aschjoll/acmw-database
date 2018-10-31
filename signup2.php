@@ -13,7 +13,7 @@ function endHTML(){
 
 function displaySignUp(){
 	startHtml();
-	echo "<form action=\"index.php\" method=\"post\">";
+	echo "<form action=\"index2.php\" method=\"post\">";
 	
 	echo "<input type=\"submit\" name=\"register\" value=\"SIGN UP\">";	
 	endHtml();

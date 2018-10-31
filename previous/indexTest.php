@@ -2,7 +2,7 @@
 
 $servername = "localhost";
 $dbname = "acmwDB";
-$password = "yourpasswordgoeshere";
+$password = "WECjk876g11!";
 
 function startHtml(){
 	echo "<html>";
@@ -25,7 +25,7 @@ function displaySignIn(){
 	echo "<input type=\"submit\" name=\"login\" value=\"LOGIN\"><br>";
 	echo "</form>";
 
-	echo "<form action=\"signup.php\" method=\"post\">";
+	echo "<form action=\"indexTest.php\" method=\"post\">";
 	echo "<input type=\"submit\" name=\"signup\" value=\"SIGN UP\">";
 	echo "</form>";
 	endHtml();
@@ -39,44 +39,29 @@ function displaySignUp(){
 	endHtml();
 }
 
-function insertUser(){
-
-}
-
 function checkLogin(){
-	echo "HELLO";
 	if(isset($_POST["user"]) && isset($_POST["password"])){
-		
-		$user = $_POST["user"];
-		$pass = $_POST["password"];
-
-		echo $user;
-		echo $pass;
-		$userQuery = "select password from student where username='$user'";
-		echo "YOU ARE NOT COOL";
-		$userQueryResult = $mysqli->query($userQuery);
-		$userQueryResult->fetch_assoc();
-		echo $userQueryResult["password"];
-		if(!$userQueryResult = $mysqli->query($userQuery)){
-			echo "ERROR";
-			echo "Error: ".$mysqli->error."\n";
-			exit;
-		}
-		else if($userQueryResult->num_rows===0){
-			echo "That username does not exist\n";
-		}
-		else{
-			echo "HELLO";
-			$correctPass = $userQueryResult->fetch_assoc();
-			if($correctPass["password"]==$pass){
-				echo "You have successfully logged in\n";
+			$user = $_POST["user"];
+			$pass = $_POST["password"];
+			$userQuery = "select password from student where username = $user;";
+			if(!$userQueryResult = $mysqli->query($userQuery)){
+				echo "Error: ".$mysqli->error."\n";
+				exit;
+			}
+			else if($userQueryResult->num_rows===0){
+				echo "That username does not exist\n";
 			}
 			else{
-				echo "Incorrect password\n";
-			}
-		}	
+				$correctPass = $userQueryResult->fetch_assoc();
+				if($correctPass["password"]==$pass){
+					echo "You have successfully logged in\n";
+				}
+				else{
+					echo "Incorrect password\n";
+				}
+			}	
+		}
 	}
-}
 
 
 $mysqli = new mysqli('127.0.0.1', 'root', $password, $dbname);
@@ -89,7 +74,6 @@ else {
 	displaySignIn();
 	if(isset($_POST["login"])){
 		checkLogin();
-		echo "YES YOU ARE";
 	}
 	else if(isset($_POST["signup"])){
 		displaySignUp();
@@ -100,6 +84,3 @@ else {
 		
 }
 
-//displaySignIn();
-
-?>

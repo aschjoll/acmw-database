@@ -1,22 +1,29 @@
 <?php
+ini_set('display_errors', 1);
+
+error_reporting(E_ALL);
 
 $servername = "localhost";
 $dbname = "acmwDB";
-$password = "yourpasswordgoeshere";
-
-$mysqli = new mysqli('127.0.0.1', 'root', $password, $dbname);
+$password = "WECjk876g11!";
+$mysqli = mysqli_connect('127.0.0.1', 'root', $password, $dbname);
+/*
+$conn = mysqli_connect("localhost", "root", "WECjk876g11!", "acmwDB");
+if (mysqli_connect_errno()) {
+  printf("Connect failed: %s\n", mysqli_connect_error());
+  exit();
+}
+*/
 
 function startHtml(){
 	echo "<html>";
 	echo "<title>ACM-W Sign In</title>";
 	echo "<body>";
 }
-
 function endHTML(){
     echo "</body>";
     echo "</html>";
 }
-
 function displaySignUp(){
 	startHtml();
 	echo "<form action=\"signup.php\" method=\"post\">";
@@ -34,6 +41,11 @@ function displaySignUp(){
 	echo "<input type=\"password\" name=\"pass\"><br><br>";
 	echo "GPA";
 	echo "<input type=\"text\" name=\"gpa\"><br><br>";
+	echo "Member?";
+        echo "<select name=\"ismember\">";
+        echo "<option>Yes</option>";
+	echo "<option>No</option>";
+        echo "</select><br><br>";
 	echo "Gender";
 	echo "<select name=\"gender\">";
 	$genderQuery="select gender from gender";
@@ -63,7 +75,7 @@ function displaySignUp(){
 	echo "<option>Yes</option>";
 	echo "<option>No</option>";
 	echo "</select><br><br>";
-	echo "Major	";
+	echo "Major";
 	echo "<select name=\"major\">";
 	$majorQuery="select major from major";
 	$majorResult = $GLOBALS['mysqli']->query($majorQuery);
@@ -74,21 +86,19 @@ function displaySignUp(){
 	echo "<input type=\"submit\" name=\"signup\" value=\"SIGN UP\">";	
 	endHtml();
 }
-
-function insertNewUser($sid, $fname, $lname, $email, $user, $pass, $gpa, $gender, $year, $race, $hispanic, $major){
+function insertNewUser($sid, $fname, $lname, $email, $user, $pass, $gpa, $ismember, $gender, $year, $race, $hispanic, $major){
 	$sid = (int)$sid;
 	$gpa = (float)$gpa;
 	if($hispanic == "Yes"){
-		$hispanic=true;
+		$hispanic=TRUE;
 	}
 	else{
-		$hispanic=false;
+		$hispanic=FALSE;
 	}
 	$genderidQuery = "select genderid from gender where gender='$gender'";
 	$yearidQuery = "select yearid from year where year='$year'";
 	$raceidQuery = "select raceid from race where race='$race' and hispanic=$hispanic";
 	$majoridQuery = "select majorid from major where major='$major'";
-
 	$genderidResult = $GLOBALS['mysqli']->query($genderidQuery);
 	while($genderids = $genderidResult->fetch_assoc()){
 		$genderid = $genderids["genderid"];
@@ -105,6 +115,28 @@ function insertNewUser($sid, $fname, $lname, $email, $user, $pass, $gpa, $gender
         while($majorids = $majoridResult->fetch_assoc()){
         	$majorid = $majorids["majorid"];
 	}
+	
+	$sql = "INSERT INTO student (sid, username, password, fname, lname, email, gpa, ismember, genderid, yearid, raceid, officerid, majorid) VALUES ($sid, '$user', '$pass', '$fname', '$lname', '$email', $gpa, 0, $genderid, $yearid, $raceid, 6, 1)";
+	
+	$result = mysqli_query($mysqli, $sql);
+	echo "<pre>Debug: $sql</pre>\m";
+	echo "<pre>Debug: $result</pre>\m";
+	if ( false===$result ) {
+  		printf("error: %s\n", mysqli_error($conn));
+	}
+	else {
+  		echo 'done.';
+	}
+
+
+
+
+/*
+	if (mysqli_query($conn, $sql)) {
+		echo "New record created successfully";
+	} else {
+		echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+	}
 	$insertQuery="insert into student (sid, username, password, fname, lname, email, gpa, genderid, yearid, raceid, officerid, majorid) values ($sid, '$user', '$pass', '$fname', '$lname', '$email', $gpa, $genderid, $yearid, $raceid, 6, $majorid)";
 	if(!$GlOBALS['mysqli']->query($insertQuery)){
 		echo "Error: ".$GLOBALS['mysqli']->error."\n";
@@ -112,8 +144,9 @@ function insertNewUser($sid, $fname, $lname, $email, $user, $pass, $gpa, $gender
 	else{
 		echo "You have successfully signed up! Please go login in!\n";
 	}
+*/
 }
-
+/*
 $mysqli = new mysqli('127.0.0.1', 'root', $password, $dbname);
 if ($mysqli->connect_errno) {
         echo "Could not connect to database \n";
@@ -121,18 +154,16 @@ if ($mysqli->connect_errno) {
         exit;
 }
 else {
+*/
 	displaySignUp();
 	if(isset($_POST["signup"])){
 		if(!empty($_POST["sid"]) && !empty($_POST["fname"]) && !empty($_POST["lname"]) && !empty($_POST["email"]) && !empty($_POST["user"]) && !empty($_POST["pass"]) && !empty($_POST["gpa"]) && !empty($_POST["gender"]) && !empty($_POST["year"]) && !empty($_POST["race"]) && !empty($_POST["hispanic"]) && !empty($_POST["major"])){
-			insertNewUser($_POST["sid"], $_POST["fname"], $_POST["lname"], $_POST["email"], $_POST["user"], $_POST["pass"], $_POST["gpa"], $_POST["gender"], $_POST["year"], $_POST["race"], isset($_POST["hispanic"]) && isset($_POST["major"]));
+			insertNewUser($_POST["sid"], $_POST["fname"], $_POST["lname"], $_POST["email"], $_POST["user"], $_POST["pass"], $_POST["gpa"], $_POST["ismember"], $_POST["gender"], $_POST["year"], $_POST["race"], isset($_POST["hispanic"]), isset($_POST["major"]));
+
 		}
 		else{
 			echo "All fields need to be filled out\n";
 		}
 	}	
-}
-
-
-
-
 ?>
+
