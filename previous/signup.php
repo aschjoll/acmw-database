@@ -1,25 +1,25 @@
 <?php
 
+ini_set('display_errors', 1);
+
+error_reporting(E_ALL);
+
 $servername = "localhost";
 $dbname = "acmwDB";
-$password = "OPr5qR8HR";
-
+$password = "WECjk876g11!";
 $mysqli = new mysqli('127.0.0.1', 'root', $password, $dbname);
-
 function startHtml(){
 	echo "<html>";
 	echo "<title>ACM-W Sign In</title>";
 	echo "<body>";
 }
-
 function endHTML(){
     echo "</body>";
     echo "</html>";
 }
-
 function displaySignUp(){
 	startHtml();
-	echo "<form action=\"signup.php\" method=\"post\">";
+	echo "<form action=\"signup4.php\" method=\"post\">";
 	echo "<br>SID";
 	echo "<input type=\"text\" name=\"sid\"><br><br>";
 	echo "First Name	";
@@ -34,6 +34,11 @@ function displaySignUp(){
 	echo "<input type=\"password\" name=\"pass\"><br><br>";
 	echo "GPA";
 	echo "<input type=\"text\" name=\"gpa\"><br><br>";
+	echo "Member?";
+        echo "<select name=\"ismember\">";
+        echo "<option>Yes</option>";
+        echo "<option>No</option>";
+        echo "</select><br><br>";
 	echo "Gender";
 	echo "<select name=\"gender\">";
 	$genderQuery="select gender from gender";
@@ -74,8 +79,7 @@ function displaySignUp(){
 	echo "<input type=\"submit\" name=\"signup\" value=\"SIGN UP\">";	
 	endHtml();
 }
-
-function insertNewUser($sid, $fname, $lname, $email, $user, $pass, $gpa, $gender, $year, $race, $hispanic, $major){
+function insertNewUser($sid, $fname, $lname, $email, $user, $pass, $gpa, $ismember, $gender, $year, $race, $hispanic, $major){
 	$sid = (int)$sid;
 	$gpa = (float)$gpa;
 	if($hispanic == "Yes"){
@@ -114,7 +118,6 @@ function insertNewUser($sid, $fname, $lname, $email, $user, $pass, $gpa, $gender
 		echo "You have successfully signed up! Please go login in!\n";
 	}
 }
-
 $mysqli = new mysqli('127.0.0.1', 'root', $password, $dbname);
 if ($mysqli->connect_errno) {
         echo "Could not connect to database \n";
@@ -132,8 +135,4 @@ else {
 		}
 	}	
 }
-
-
-
-
 ?>
