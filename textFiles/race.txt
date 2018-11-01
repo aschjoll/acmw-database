@@ -1,6 +1,6 @@
 \n	White	0
 \n	Asian	0
-\n	Black or African America	0
+\n	Black or African American	0
 \n	American Indian or Alaska Native	0
 \n	Native Hawaiian or Other Pacific Islander	0
 \n	White	1
