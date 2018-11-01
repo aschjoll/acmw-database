@@ -165,7 +165,7 @@ if (isset($_POST['register'])) {
         	//echo "Race";
 		echo "<div class=\"form-group\">";
         	echo "<select class=\"form-control\" name=\"race\">";
-        	$raceQuery="select race from race";
+        	$raceQuery="select race from race where hispanic=0";
         	$raceResult = mysqli_query($db, $raceQuery);
         	while($races = mysqli_fetch_assoc($raceResult)){
         	        echo "<option>".$races["race"]."</option>";
