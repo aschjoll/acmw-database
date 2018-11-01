@@ -1,8 +1,4 @@
 <?php
-ini_set('display_error', 1);
-
-error_reporting(E_ALL);
-
 session_start();
 
 // initializing variables
@@ -57,7 +53,7 @@ if (isset($_POST['reg_user'])) {
   	mysqli_query($db, $query);
   	$_SESSION['username'] = $username;
   	$_SESSION['success'] = "You are now logged in";
-  	header('location: register.php');
+  	header('location: welcome.php');
   }
 }
 ?>
