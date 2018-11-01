@@ -1,71 +1,27 @@
 <?php
 
+//inspired by http://codewithawa.com/posts/complete-user-registration-system-using-php-and-mysql-database
+//css from https://bootsnipp.com/snippets/ZXz3x
+
 session_start();
 
-// initializing variables
 $username = "";
-$email    = "";
+$password = "";
 $errors = array(); 
 
 // connect to the database
 $db = mysqli_connect('127.0.0.1', 'root', 'WECjk876g11!', 'acmwDB');
 
-// REGISTER USER
-if (isset($_POST['reg_user'])) {
-  // receive all input values from the form
-  $username = mysqli_real_escape_string($db, $_POST['username']);
-  $email = mysqli_real_escape_string($db, $_POST['email']);
-  $password_1 = mysqli_real_escape_string($db, $_POST['password_1']);
-  $password_2 = mysqli_real_escape_string($db, $_POST['password_2']);
+if (isset($_POST['login'])) {
 
-  // form validation: ensure that the form is correctly filled ...
-  // by adding (array_push()) corresponding error unto $errors array
-  if (empty($username)) { array_push($errors, "Username is required"); }
-  if (empty($email)) { array_push($errors, "Email is required"); }
-  if (empty($password_1)) { array_push($errors, "Password is required"); }
-  if ($password_1 != $password_2) {
-	array_push($errors, "The two passwords do not match");
+  $username = $_POST['username'];
+  $password = $_POST['password'];
+
+  if (empty($username)) { 
+    array_push($errors, "Username is required"); 
   }
-
-  // first check the database to make sure 
-  // a user does not already exist with the same username and/or email
-  $user_check_query = "SELECT * FROM student WHERE username='$username' OR email='$email' LIMIT 1";
-  $result = mysqli_query($db, $user_check_query);
-  $user = mysqli_fetch_assoc($result);
-  
-  if ($user) { // if user exists
-    if ($user['username'] === $username) {
-      array_push($errors, "Username already exists");
-    }
-
-    if ($user['email'] === $email) {
-      array_push($errors, "email already exists");
-    }
-  }
-
-  // Finally, register user if there are no errors in the form
-  if (count($errors) == 0) {
-  	$password = md5($password_1);//encrypt the password before saving in the database
-
-  	$query = "INSERT INTO users (username, email, password) 
-  			  VALUES('$username', '$email', '$password')";
-  	mysqli_query($db, $query);
-  	$_SESSION['username'] = $username;
-  	$_SESSION['success'] = "You are now logged in";
-  	header('location: welcome.php');
-  }
-}
-
-// LOGIN USER
-if (isset($_POST['login_user'])) {
-  $username = mysqli_real_escape_string($db, $_POST['username']);
-  $password = mysqli_real_escape_string($db, $_POST['password']);
-
-  if (empty($username)) {
-  	array_push($errors, "Username is required");
-  }
-  if (empty($password)) {
-  	array_push($errors, "Password is required");
+  if (empty($password)) { 
+    array_push($errors, "Password is required"); 
   }
 
   if (count($errors) == 0) {
@@ -86,100 +42,94 @@ if (isset($_POST['login_user'])) {
 
 <html>
 <head>
-<title>Registration system PHP and MySQL</title>
+        <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+
+        <title>Login to the ACM-W Website</title>
 </head>
-<body>
-<div class="header">
-<h2>Login</h2>
-</div>
- 
-<form method="post" action="login.php">
-<?php include('errors.php'); ?>
-<div class="input-group">
-	<label>Username</label>
-	<input type="text" name="username" >
-</div>
-<div class="input-group">
-	<label>Password</label>
-	<input type="password" name="password">
-</div>
-<div class="input-group">
-	<button type="submit" class="btn" name="login_user">Login</button>
-</div>
-<p>
-	Not yet a member? <a href="register.php">Sign up</a>
-  	</p>
-  </form>
+<body id="LoginForm">
+        <div class="container">
+        	<h1 class="form-heading"></h1>
+        	<div class="login-form">
+        		<div class="main-div">
+        			<div class="panel">
+        				<h2>Login</h2>
+        				<p>Please enter your information</p>
+        			</div>
+        			<form id="Login" action="login.php" method="post">
+                			<div class="form-group">
+						<input type="text" name="username" class="form-control" placeholder="Username">
+                			</div>
+                			<div class="form-group">
+                				<input type="password" name="password" class="form-control" placeholder="Password">
+                			</div>
+					<?php        
+						foreach ($errors as $error){
+                        				echo $error."\n";
+                				}
+                				echo "\n";
+                			?>
+                			<br><button type="submit" class="btn btn-primary" name="login">Login</button><br>
+					<p>Not yet a member? <a href="register.php">Sign up</a></p>
+				</form>
+			</div>
+		</div>
+	</div>
 </body>
 </html>
 
 <style>
-{
-  margin: 0px;
-  padding: 0px;
+body#LoginForm{ background-image:url("https://hdwallsource.com/img/2014/9/blur-26347-27038-hd-wallpapers.jpg"); background-repeat:no-repeat; background-position:center; background-size:cover; padding:10px;}
+
+.form-heading { color:#fff; font-size:23px;}
+.panel h2{ color:#444444; font-size:18px; margin:0 0 8px 0;}
+.panel p { color:#777777; font-size:14px; margin-bottom:30px; line-height:24px;}
+.login-form .form-control {
+  background: #f7f7f7 none repeat scroll 0 0;
+  border: 1px solid #d4d4d4;
+  border-radius: 4px;
+  font-size: 14px;
+  height: 50px;
+  line-height: 50px;
 }
-body {
-  font-size: 120%;
-  background: #F8F8FF;
+.main-div {
+  background: #ffffff none repeat scroll 0 0;
+  border-radius: 2px;
+  margin: 10px auto 30px;
+  max-width: 38%;
+  padding: 50px 70px 70px 71px;
 }
 
-.header {
-  width: 30%;
-  margin: 50px auto 0px;
-  color: white;
-  background: #5F9EA0;
-  text-align: center;
-  border: 1px solid #B0C4DE;
-  border-bottom: none;
-  border-radius: 10px 10px 0px 0px;
-  padding: 20px;
+.login-form .form-group {
+  margin-bottom:10px;
 }
-form, .content {
-  width: 30%;
-  margin: 0px auto;
-  padding: 20px;
-  border: 1px solid #B0C4DE;
-  background: white;
-  border-radius: 0px 0px 10px 10px;
+.login-form{ text-align:center;}
+.forgot a {
+  color: #777777;
+  font-size: 14px;
+  text-decoration: underline;
 }
-.input-group {
-  margin: 10px 0px 10px 0px;
+.login-form  .btn.btn-primary {
+  background: #f0ad4e none repeat scroll 0 0;
+  border-color: #f0ad4e;
+  color: #ffffff;
+  font-size: 14px;
+  width: 100%;
+  height: 50px;
+  line-height: 50px;
+  padding: 0;
 }
-.input-group label {
-  display: block;
-  text-align: left;
-  margin: 3px;
+.forgot {
+  text-align: left; margin-bottom:30px;
 }
-.input-group input {
-  height: 30px;
-  width: 93%;
-  padding: 5px 10px;
-  font-size: 16px;
-  border-radius: 5px;
-  border: 1px solid gray;
+.botto-text {
+  color: #ffffff;
+  font-size: 14px;
+  margin: auto;
 }
-.btn {
-  padding: 10px;
-  font-size: 15px;
-  color: white;
-  background: #5F9EA0;
-  border: none;
-  border-radius: 5px;
+.login-form .btn.btn-primary.reset {
+  background: #ff9900 none repeat scroll 0 0;
 }
-.error {
-  width: 92%; 
-  margin: 0px auto; 
-  padding: 10px; 
-  border: 1px solid #a94442; 
-  color: #a94442; 
-  background: #f2dede; 
-  border-radius: 5px; 
-  text-align: left;
-}
-.success {
-  color: #3c763d; 
-  background: #dff0d8; 
-  border: 1px solid #3c763d;
-  margin-bottom: 20px;
-}
+.back { text-align: left; margin-top:10px;}
+.back a {color: #444444; font-size: 13px;text-decoration: none;}
 </style>
+

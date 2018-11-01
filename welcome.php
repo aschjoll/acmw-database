@@ -11,107 +11,96 @@ session_start();
   	header("location: login.php");
   }
 ?>
-<!DOCTYPE html>
+
+
 <html>
 <head>
-	<title>Home</title>
-	<link rel="stylesheet" type="text/css" href="style.css">
+        <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+
+        <title>Home</title>
 </head>
-<body>
-
-<div class="header">
-	<h2>Home Page</h2>
-</div>
-<div class="content">
-  	<!-- notification message -->
-  	<?php if (isset($_SESSION['success'])) : ?>
-      <div class="error success" >
-      	<h3>
-          <?php 
-          	echo $_SESSION['success']; 
-          	unset($_SESSION['success']);
-          ?>
-      	</h3>
-      </div>
-  	<?php endif ?>
-
-    <!-- logged in user information -->
-    <?php  if (isset($_SESSION['username'])) : ?>
-    	<p>Welcome <strong><?php echo $_SESSION['username']; ?></strong></p>
-    	<p> <a href="welcome.php?logout='1'" style="color: red;">logout</a> </p>
-    <?php endif ?>
-</div>
-		
+<body id="LoginForm">
+	<div class="container">
+        	<h1 class="form-heading"></h1>
+        	<div class="login-form">
+        		<div class="main-div">
+        			<div class="panel">
+					<!-- notification message -->
+				        <?php if (isset($_SESSION['success'])) : ?>
+      						<div class="error success" >
+        					<h2>	<?php
+                						echo $_SESSION['success'];
+                						unset($_SESSION['success']);
+          						?>
+        					</h2>
+      						</div>
+        				<?php endif ?>
+					<?php  if (isset($_SESSION['username'])) : ?>
+				        <h3>Welcome <strong><?php echo $_SESSION['username']; ?></strong></h3>
+        				<p> <a href="welcome.php?logout='1'" style="color: red;">logout</a> </p>
+    					<?php endif ?>
+        			</div>
+			</div>
+		</div>
+	</div>
 </body>
 </html>
 
+
+
 <style>
-{
-  margin: 0px;
-  padding: 0px;
+body#LoginForm{ background-image:url("https://hdwallsource.com/img/2014/9/blur-26347-27038-hd-wallpapers.jpg"); background-repeat:no-repeat; background-position:center; background-size:cover; padding:10px;}
+
+.form-heading { color:#fff; font-size:23px;}
+.panel h2{ color:#444444; font-size:18px; margin:0 0 8px 0;}
+.panel p { color:#777777; font-size:14px; margin-bottom:30px; line-height:24px;}
+.login-form .form-control {
+  background: #f7f7f7 none repeat scroll 0 0;
+  border: 1px solid #d4d4d4;
+  border-radius: 4px;
+  font-size: 14px;
+  height: 50px;
+  line-height: 50px;
 }
-body {
-  font-size: 120%;
-  background: #F8F8FF;
+.main-div {
+  background: #ffffff none repeat scroll 0 0;
+  border-radius: 2px;
+  margin: 10px auto 30px;
+  max-width: 38%;
+  padding: 50px 70px 70px 71px;
 }
 
-.header {
-  width: 30%;
-  margin: 50px auto 0px;
-  color: white;
-  background: #5F9EA0;
-  text-align: center;
-  border: 1px solid #B0C4DE;
-  border-bottom: none;
-  border-radius: 10px 10px 0px 0px;
-  padding: 20px;
+.login-form .form-group {
+  margin-bottom:10px;
 }
-form, .content {
-  width: 30%;
-  margin: 0px auto;
-  padding: 20px;
-  border: 1px solid #B0C4DE;
-  background: white;
-  border-radius: 0px 0px 10px 10px;
+.login-form{ text-align:center;}
+.forgot a {
+  color: #777777;
+  font-size: 14px;
+  text-decoration: underline;
 }
-.input-group {
-  margin: 10px 0px 10px 0px;
+.login-form  .btn.btn-primary {
+  background: #f0ad4e none repeat scroll 0 0;
+  border-color: #f0ad4e;
+  color: #ffffff;
+  font-size: 14px;
+  width: 100%;
+  height: 50px;
+  line-height: 50px;
+  padding: 0;
 }
-.input-group label {
-  display: block;
-  text-align: left;
-  margin: 3px;
+.forgot {
+  text-align: left; margin-bottom:30px;
 }
-.input-group input {
-  height: 30px;
-  width: 93%;
-  padding: 5px 10px;
-  font-size: 16px;
-  border-radius: 5px;
-  border: 1px solid gray;
+.botto-text {
+  color: #ffffff;
+  font-size: 14px;
+  margin: auto;
 }
-.btn {
-  padding: 10px;
-  font-size: 15px;
-  color: white;
-  background: #5F9EA0;
-  border: none;
-  border-radius: 5px;
+.login-form .btn.btn-primary.reset {
+  background: #ff9900 none repeat scroll 0 0;
 }
-.error {
-  width: 92%; 
-  margin: 0px auto; 
-  padding: 10px; 
-  border: 1px solid #a94442; 
-  color: #a94442; 
-  background: #f2dede; 
-  border-radius: 5px; 
-  text-align: left;
-}
-.success {
-  color: #3c763d; 
-  background: #dff0d8; 
-  border: 1px solid #3c763d;
-  margin-bottom: 20px;
-}
+.back { text-align: left; margin-top:10px;}
+.back a {color: #444444; font-size: 13px;text-decoration: none;}
 </style>
+
