@@ -2,7 +2,7 @@
 
 //inspired by http://codewithawa.com/posts/complete-user-registration-system-using-php-and-mysql-database
 //css from https://bootsnipp.com/snippets/ZXz3x 
-
+include('config.php');
 session_start();
 
 $sid = "";
@@ -10,7 +10,6 @@ $user = "";
 $email = "";
 $errors = array(); 
 
-$db = mysqli_connect('127.0.0.1', 'root', 'WECjk876g11!', 'acmwDB');
 if (isset($_POST['register'])) {
   $sid = (int)$_POST['sid'];
   $fname = $_POST['fname'];
@@ -34,7 +33,7 @@ if (isset($_POST['register'])) {
   }
 
   $student_check_query = "SELECT * FROM student WHERE username='$user' OR email='$email' OR sid='$sid' LIMIT 1";
-  $result = mysqli_query($db, $user_check_query);
+  $result = mysqli_query($conn, $user_check_query);
   $student = mysqli_fetch_assoc($result);
   
   if ($student) {
@@ -60,19 +59,19 @@ if (isset($_POST['register'])) {
         $yearidQuery = "select yearid from year where year='$year'";
         $raceidQuery = "select raceid from race where race='$race' and hispanic=$hispanic";
         $majoridQuery = "select majorid from major where major='$major'";
-        $genderidResult = mysqli_query($db, $genderidQuery);
+        $genderidResult = mysqli_query($conn, $genderidQuery);
         while($genderids = mysqli_fetch_assoc($genderidResult)){
                 $genderid = $genderids["genderid"];
         }
-        $yearidResult = mysqli_query($db, $yearidQuery);
+        $yearidResult = mysqli_query($conn, $yearidQuery);
         while($yearids = mysqli_fetch_assoc($yearidResult)){
               $yearid = $yearids["yearid"];
         }
-        $raceidResult = mysqli_query($db, $raceidQuery);
+        $raceidResult = mysqli_query($conn, $raceidQuery);
         while($raceids = mysqli_fetch_assoc($raceidResult)){
                 $raceid = $raceids["raceid"];
         }
-        $majoridResult = mysqli_query($db, $majoridQuery);
+        $majoridResult = mysqli_query($conn, $majoridQuery);
         while($majorids = mysqli_fetch_assoc($majoridResult)){
                 $majorid = $majorids["majorid"];
         }
@@ -82,7 +81,7 @@ if (isset($_POST['register'])) {
   	$query = "INSERT INTO student (sid, username, password, fname, lname, email, gpa, ismember, genderid, yearid, raceid, officerid, majorid)
   		VALUES($sid, '$user', '$password', '$fname', '$lname', '$email', $gpa, 0, $genderid, $yearid, $raceid, 6, $majorid)";
 	echo $query;
-  	mysqli_query($db, $query);
+  	mysqli_query($conn, $query);
 
   	$_SESSION['username'] = $user;
   	$_SESSION['success'] = "You are now logged in";
@@ -96,7 +95,7 @@ if (isset($_POST['register'])) {
 <html>
 <head>
 	<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-
+	<link rel="stylesheet" href="mainstyles.css" type="text/css">
  	<title>Register for ACM-W website Access</title>
 </head>
 <body id="LoginForm">
@@ -146,7 +145,7 @@ if (isset($_POST['register'])) {
 		echo "<div class=\"form-group\">";
         	echo "<select class=\"form-control\" name=\"gender\">";
         	$genderQuery="select gender from gender";
-        	$genderResult = mysqli_query($db, $genderQuery);
+        	$genderResult = mysqli_query($conn, $genderQuery);
         	while($genders = mysqli_fetch_assoc($genderResult)){
         	        echo "<option>".$genders["gender"]."</option>";
         	}
@@ -156,7 +155,7 @@ if (isset($_POST['register'])) {
 		echo "<div class=\"form-group\">";
         	echo "<select class=\"form-control\" name=\"year\">";
         	$yearQuery="select year from year";
-        	$yearResult = mysqli_query($db, $yearQuery);
+        	$yearResult = mysqli_query($conn, $yearQuery);
         	while($years = mysqli_fetch_assoc($yearResult)){
         	        echo "<option>".$years["year"]."</option>";
         	}
@@ -166,7 +165,7 @@ if (isset($_POST['register'])) {
 		echo "<div class=\"form-group\">";
         	echo "<select class=\"form-control\" name=\"race\">";
         	$raceQuery="select race from race where hispanic=0";
-        	$raceResult = mysqli_query($db, $raceQuery);
+        	$raceResult = mysqli_query($conn, $raceQuery);
         	while($races = mysqli_fetch_assoc($raceResult)){
         	        echo "<option>".$races["race"]."</option>";
         	}
@@ -183,7 +182,7 @@ if (isset($_POST['register'])) {
 		echo "<div class=\"form-group\">";
         	echo "<select class=\"form-control\" name=\"major\">";
         	$majorQuery="select major from major";
-        	$majorResult = mysqli_query($db, $majorQuery);
+        	$majorResult = mysqli_query($conn, $majorQuery);
         	while($majors = mysqli_fetch_assoc($majorResult)){
                 	echo "<option>".$majors["major"]."</option>";
         	}
@@ -201,59 +200,3 @@ if (isset($_POST['register'])) {
 </div></div></div>
 </body>
 </html>
-
-<style> 
-body#LoginForm{ background-image:url("https://hdwallsource.com/img/2014/9/blur-26347-27038-hd-wallpapers.jpg"); background-repeat:no-repeat; background-position:center; background-size:cover; padding:10px;}
-
-.form-heading { color:#fff; font-size:23px;}
-.panel h2{ color:#444444; font-size:18px; margin:0 0 8px 0;}
-.panel p { color:#777777; font-size:14px; margin-bottom:30px; line-height:24px;}
-.login-form .form-control {
-  background: #f7f7f7 none repeat scroll 0 0;
-  border: 1px solid #d4d4d4;
-  border-radius: 4px;
-  font-size: 14px;
-  height: 50px;
-  line-height: 50px;
-}
-.main-div {
-  background: #ffffff none repeat scroll 0 0;
-  border-radius: 2px;
-  margin: 10px auto 30px;
-  max-width: 38%;
-  padding: 50px 70px 70px 71px;
-}
-
-.login-form .form-group {
-  margin-bottom:10px;
-}
-.login-form{ text-align:center;}
-.forgot a {
-  color: #777777;
-  font-size: 14px;
-  text-decoration: underline;
-}
-.login-form  .btn.btn-primary {
-  background: #f0ad4e none repeat scroll 0 0;
-  border-color: #f0ad4e;
-  color: #ffffff;
-  font-size: 14px;
-  width: 100%;
-  height: 50px;
-  line-height: 50px;
-  padding: 0;
-}
-.forgot {
-  text-align: left; margin-bottom:30px;
-}
-.botto-text {
-  color: #ffffff;
-  font-size: 14px;
-  margin: auto;
-}
-.login-form .btn.btn-primary.reset {
-  background: #ff9900 none repeat scroll 0 0;
-}
-.back { text-align: left; margin-top:10px;}
-.back a {color: #444444; font-size: 13px;text-decoration: none;}
-</style>
