@@ -56,8 +56,7 @@ FIELDS TERMINATED BY '\t';
 create table location
         (
         locationid int not null primary key auto_increment,
-        building varchar(50),
-        room varchar(5),
+        buildingRoom varchar(50),
         address varchar(50)
         );
 
@@ -133,8 +132,8 @@ create table event
         event varchar(50) not null,
 	eventTime datetime not null,
 	description text not null,
-        sid int not null,
-        projectid int not null,
+        sid int,
+        projectid int,
         locationid int not null,
         foreign key (sid) 
 	references student(sid),
@@ -142,6 +141,7 @@ create table event
 	references project(projectid),
         foreign key (locationid) 
 	references location(locationid)
+	on delete cascade
         );
 
 LOAD DATA LOCAL INFILE '/home/afco229//acmw-database/textFiles/event.txt'
@@ -159,6 +159,7 @@ create table attends
 	references student(sid),
         foreign key (eventid) 
 	references event(eventid)
+	on delete cascade
         );
 
 LOAD DATA LOCAL INFILE '/home/afco229//acmw-database/textFiles/attends.txt'

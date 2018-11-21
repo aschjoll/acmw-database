@@ -17,32 +17,33 @@ $result = $conn->query($sql);
 	// output data of each row
 	while($i < $result->num_rows) {
 		$row = mysqli_fetch_assoc($result);
-		$title = $row['event'];
-		$dateTime = $row['eventTime'];
-		$dateTime = DateTime::createFromFormat('Y-m-d H:i:s', $dateTime);
-		$date = $dateTime->format('F jS Y');
-		$time = $dateTime->format('g:i a');
-		$formattedDateTime = $dateTime->format('F jS Y, g:i a');
-		$description = $row['description'];
-		$locationid = $row['locationid'];
+		$title[$i] = $row['event'];
+		$dateTimeRaw[$i] = $row['eventTime'];
+		$dateTime[$i] = DateTime::createFromFormat('Y-m-d H:i:s', $dateTimeRaw[$i]);
+		$date[$i] = $dateTime[$i]->format('F jS Y');
+		$time[$i] = $dateTime[$i]->format('g:i a');
+		$formattedDateTime[$i] = $dateTime[$i]->format('F jS Y, g:i a');
+		$description[$i] = $row['description'];
+		$locationid[$i] = $row['locationid'];
 		if($row['buildingRoom']==null){
-			$location = $row['address'];
+			$location[$i] = $row['address'];
 		}
 		else{
-			$location = $row['buildingRoom'];
+			$location[$i] = $row['buildingRoom'];
 		}
 ?>
 		<div class="row">
 		  <div class="col s12">
 		    <div class="card-panel blue lighten-4">
 		      <span class="blue-grey-text text-darken-3">
-		        <h4><?php echo $title?></h4>
+		        <h4><?php echo $title[$i]?></h4>
 		        <div class="divider blue-grey darken-3"></div>
-		          <h6><?php echo $formattedDateTime?></h6>
-			  <h6><?php echo $location?></h6>
-		          <?php echo $description?><br><br>
-		          <a class="waves-effect waves-light btn-small modal-trigger orange lighten-2" href="#edit">Edit</a>
-		          <a class="waves-effect waves-light btn-small orange lighten-2">Delete</a>
+		          <h6><?php echo $formattedDateTime[$i]?></h6>
+			  <h6><?php echo $location[$i]?></h6>
+		          <?php echo $description[$i]?><br><br>
+		          <a class="waves-effect waves-light btn-small modal-trigger orange lighten-2" href="#edit" name="<?="edit$i"?>">Edit</a>
+		          <a class="waves-effect waves-light btn-small orange lighten-2" href="?delete=<?=$i?>">Delete</a>
+				<?php echo $i?>
 		          <!-- Modal Structure -->
 		          <div id="edit" class="modal">
 		            <div class="modal-content">
@@ -51,19 +52,19 @@ $result = $conn->query($sql);
 		                <form class="col s12" action="addEvent.php" method="post">
 	 	                  <div class="row">
 		                    <div class="input-field col s6">
-	 	                      <input id="name" type="text" class="validate" value="<?=$title?>">
+	 	                      <input id="name" type="text" class="validate" value="<?=$title[$i]?>">
 		                      <label for="name">Event Name</label>
 		                    </div>
 		                  </div>
 		                  <div class="row">
 		                    <div class="input-field col s6">
-		                      <input type="text" class="datepicker" value="<?=htmlspecialchars($date)?>">
+		                      <input type="text" class="datepicker" value="<?=htmlspecialchars($date[$i])?>">
 		                      <label for="name">Event Date</label>
 		                    </div>
 		                  </div>
 		                  <div class="row">
 		                    <div class="input-field col s6">
-		                      <input type="text" class="timepicker" value="<?=$time?>">
+		                      <input type="text" class="timepicker" value="<?=$time[$i]?>">
 		                      <label for="name">Event Time</label>
 		                    </div>
 		                  </div>
@@ -122,6 +123,28 @@ $result = $conn->query($sql);
 } else {
 	echo "0 results";
 }
+/*
+if($_GET['delete']==1){
+
+	echo "PEE";
+}*/
+for($j=0; $j<$result->num_rows; $j++){
+	if($_GET['delete']==$j){
+		$eventidQuery = "select eventid from event where eventTime = '".$dateTimeRaw[$j]."'";
+                $eventidResult = mysqli_query($conn, $eventidQuery);
+                while($eventids = mysqli_fetch_assoc($eventidResult)){
+                        $eventid=$eventids["eventid"];
+                }
+
+		$deleteQuery = "delete from event where eventid = $eventid";
+		if(!mysqli_query($conn, $deleteQuery)){
+			echo "ERROR".mysqli_error($conn);
+		}
+	}
+}
+		
+		
+
 ?>
 
 <a class="btn-floating btn-large waves-effect waves-light modal-trigger orange lighten-2" href="#add"><i class="material-icons">add</i></a>
