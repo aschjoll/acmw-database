@@ -129,7 +129,7 @@ if($_GET['delete']==1){
 	echo "PEE";
 }*/
 for($j=0; $j<$result->num_rows; $j++){
-	if($_GET['delete']==$j){
+	if(isset($_GET['delete']) && $_GET['delete']==$j){
 		$eventidQuery = "select eventid from event where eventTime = '".$dateTimeRaw[$j]."'";
                 $eventidResult = mysqli_query($conn, $eventidQuery);
                 while($eventids = mysqli_fetch_assoc($eventidResult)){
@@ -137,6 +137,7 @@ for($j=0; $j<$result->num_rows; $j++){
                 }
 
 		$deleteQuery = "delete from event where eventid = $eventid";
+		echo $deleteQuery;
 		if(!mysqli_query($conn, $deleteQuery)){
 			echo "ERROR".mysqli_error($conn);
 		}
