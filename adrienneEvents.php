@@ -54,7 +54,7 @@ $result = $conn->query($sql);
 		            <div class="modal-content">
 		              <h4>Edit Event</h4>
 		              <div class="row">
-		                <form class="col s12" action="addEvent.php" method="post">
+		                <form class="col s12" action="events.php" method="post">
 	 	                  <div class="row">
 		                    <div class="input-field col s6">
 	 	                      <!--<input id="name" type="text" class="validate" value=<?//=$title[$eventid]?>">-->
@@ -163,6 +163,42 @@ for($j=1; $j<=max($allEventIds); $j++){
 		}
 		
 	}
+	$edit = $_GET['edit'];
+	if(isset($edit) && $edit=="$j"){
+		$eventidQuery = "select eventid from event where eventTime = '".$dateTimeRaw[$j]."'";
+                $eventidResult = mysqli_query($conn, $eventidQuery);
+                if($eventids = mysqli_fetch_assoc($eventidResult)){
+                        $eventid = $eventids['eventid'];
+			$updateQuery = "update event set";
+			if($_POST['name']!=$title[$j]){
+				$updateName = $_POST['name'];
+				$updateQuery = $updateQuery." event = '".$updateName."'";
+			}
+			if($_POST['date']!=$date[$j] || $_POST['time']!=$time[$j]){
+				$dateTimeFormat = strtotime($_POST['date']." ".$_POST['time']);
+        			$updateDateTime = date("Y-m-d H:i:s", $dateTimeFormat);
+				$updateQuery = $updateQuery.", eventTime = '".$updateDateTime."'";
+			}
+			if($br!="null"){
+				if($_POST['building']!=$location[$j]){
+                                	$updateLocation = $_POST['building'];
+					$updateQuery = $updateQuery.", buildingRoom = '".$updateLocation."'";
+                        	}
+			}
+			else if($add!="null"){
+				if($_POST['address']!=$location[$j]){
+                                        $updateLocation = $_POST['building'];
+					$updateQuery = $updateQuery.", address = '".$updateLocation."'";
+                                }
+			}
+                        $updateQuery = $updateQuery." where eventid = $eventid";
+			echo $updateQuery;
+                        /*if(!mysqli_query($conn, $updateQuery)){
+                                echo "ERROR".mysqli_error($conn);
+                        }*/
+                }
+	}
+	
 }
 		
 		
