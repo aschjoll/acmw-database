@@ -6,44 +6,49 @@ if ($conn->connect_error) {
 	die("Connection failed: " . $conn->connect_error);
 }
 
-$sql = "SELECT event, eventTime, description, locationid, buildingRoom, address FROM event natural join location";
+$sql = "SELECT eventid, event, eventTime, description, locationid, buildingRoom, address FROM event natural join location";
 $result = $conn->query($sql);
 ?>
 
 <html>
 
-<?php   if ($result->num_rows > 0) {
+<?php   
+	$allEventIds = array();
+	if ($result->num_rows > 0) {
 	$i = 0;
 	// output data of each row
 	while($i < $result->num_rows) {
 		$row = mysqli_fetch_assoc($result);
-		$title[$i] = $row['event'];
-		$dateTimeRaw[$i] = $row['eventTime'];
-		$dateTime[$i] = DateTime::createFromFormat('Y-m-d H:i:s', $dateTimeRaw[$i]);
-		$date[$i] = $dateTime[$i]->format('F jS Y');
-		$time[$i] = $dateTime[$i]->format('g:i a');
-		$formattedDateTime[$i] = $dateTime[$i]->format('F jS Y, g:i a');
-		$description[$i] = $row['description'];
-		$locationid[$i] = $row['locationid'];
+		$eventid = $row['eventid'];
+		$title[$eventid] = $row['event'];
+		$dateTimeRaw[$eventid] = $row['eventTime'];
+		$dateTime[$eventid] = DateTime::createFromFormat('Y-m-d H:i:s', $dateTimeRaw[$eventid]);
+		$date[$eventid] = $dateTime[$eventid]->format('F jS Y');
+		$time[$eventid] = $dateTime[$eventid]->format('g:i a');
+		$formattedDateTime[$eventid] = $dateTime[$eventid]->format('F jS Y, g:i a');
+		$description[$eventid] = $row['description'];
+		$locationid[$eventid] = $row['locationid'];
 		if($row['buildingRoom']==null){
-			$location[$i] = $row['address'];
+			$location[$eventid] = $row['address'];
 		}
 		else{
-			$location[$i] = $row['buildingRoom'];
+			$location[$eventid] = $row['buildingRoom'];
 		}
+
+		array_push($allEventIds, $eventid);
+
 ?>
 		<div class="row">
 		  <div class="col s12">
 		    <div class="card-panel blue lighten-4">
 		      <span class="blue-grey-text text-darken-3">
-		        <h4><?php echo $title[$i]?></h4>
+		        <h4><?php echo $title[$eventid]?></h4>
 		        <div class="divider blue-grey darken-3"></div>
-		          <h6><?php echo $formattedDateTime[$i]?></h6>
-			  <h6><?php echo $location[$i]?></h6>
-		          <?php echo $description[$i]?><br><br>
+		          <h6><?php echo $formattedDateTime[$eventid]?></h6>
+			  <h6><?php echo $location[$eventid]?></h6>
+		          <?php echo $description[$eventid]?><br><br>
 		          <a class="waves-effect waves-light btn-small modal-trigger orange lighten-2" href="#edit" name="<?="edit$i"?>">Edit</a>
-		          <a class="waves-effect waves-light btn-small orange lighten-2" href="?delete=<?=$i?>">Delete</a>
-				<?php echo $i?>
+		          <a class="waves-effect waves-light btn-small orange lighten-2" href="?delete=<?=$eventid?>">Delete</a>
 		          <!-- Modal Structure -->
 		          <div id="edit" class="modal">
 		            <div class="modal-content">
@@ -52,20 +57,23 @@ $result = $conn->query($sql);
 		                <form class="col s12" action="addEvent.php" method="post">
 	 	                  <div class="row">
 		                    <div class="input-field col s6">
-	 	                      <input id="name" type="text" class="validate" value="<?=$title[$i]?>">
+	 	                      <!--<input id="name" type="text" class="validate" value=<?//=$title[$eventid]?>">-->
+				      <input id="name" type="text" class="validate">
 		                      <label for="name">Event Name</label>
 		                    </div>
 		                  </div>
 		                  <div class="row">
 		                    <div class="input-field col s6">
-		                      <input type="text" class="datepicker" value="<?=htmlspecialchars($date[$i])?>">
+		                      <!--<input type="text" class="datepicker" value="<?//=htmlspecialchars($date[$eventid])?>">-->
+				      <input type="text" class="datepicker">
 		                      <label for="name">Event Date</label>
 		                    </div>
 		                  </div>
 		                  <div class="row">
 		                    <div class="input-field col s6">
-		                      <input type="text" class="timepicker" value="<?=$time[$i]?>">
-		                      <label for="name">Event Time</label>
+		                      <!--<input type="text" class="timepicker" value="<?//=$time[$eventid]?>">-->
+		                      <input type="text" class="timepicker">
+				      <label for="name">Event Time</label>
 		                    </div>
 		                  </div>
 				  <div class="input-field col s6">
@@ -123,24 +131,20 @@ $result = $conn->query($sql);
 } else {
 	echo "0 results";
 }
-/*
-if($_GET['delete']==1){
 
-	echo "PEE";
-}*/
-for($j=0; $j<$result->num_rows; $j++){
-	if(isset($_GET['delete']) && $_GET['delete']==$j){
+for($j=1; $j<=max($allEventIds); $j++){
+	$delete = $_GET['delete'];
+	if(isset($delete) && $delete=="$j"){
 		$eventidQuery = "select eventid from event where eventTime = '".$dateTimeRaw[$j]."'";
                 $eventidResult = mysqli_query($conn, $eventidQuery);
-                while($eventids = mysqli_fetch_assoc($eventidResult)){
-                        $eventid=$eventids["eventid"];
-                }
-
-		$deleteQuery = "delete from event where eventid = $eventid";
-		echo $deleteQuery;
-		if(!mysqli_query($conn, $deleteQuery)){
-			echo "ERROR".mysqli_error($conn);
+		if($eventids = mysqli_fetch_assoc($eventidResult)){
+			$eventid = $eventids['eventid'];
+			$deleteQuery = "delete from event where eventid = $eventid";
+			if(!mysqli_query($conn, $deleteQuery)){
+				echo "ERROR".mysqli_error($conn);
+			}
 		}
+		
 	}
 }
 		
