@@ -28,6 +28,8 @@ $result = $conn->query($sql);
 		$formattedDateTime[$eventid] = $dateTime[$eventid]->format('F jS Y, g:i a');
 		$description[$eventid] = $row['description'];
 		$locationid[$eventid] = $row['locationid'];
+		$locationB[$eventid] = $row['buildingRoom'];
+		$locationA[$eventid] = $row['address'];
 		if($row['buildingRoom']==null){
 			$location[$eventid] = $row['address'];
 		}
@@ -58,26 +60,26 @@ $result = $conn->query($sql);
 	 	                  <div class="row">
 		                    <div class="input-field col s6">
 	 	                      <!--<input id="name" type="text" class="validate" value=<?//=$title[$eventid]?>">-->
-				      <input id="name" type="text" class="validate" value="<?=$title[$eventid]?>">
+				      <input name="updateName" type="text" class="validate" value="<?=$title[$eventid]?>">
 		                      <label for="name">Event Name</label>
 		                    </div>
 		                  </div>
 		                  <div class="row">
 		                    <div class="input-field col s6">
 		                      <!--<input type="text" class="datepicker" value="<?//=htmlspecialchars($date[$eventid])?>">-->
-				      <input type="text" class="datepicker" value="<?=htmlspecialchars($date[$eventid])?>">
+				      <input name="updateDate" type="text" class="datepicker" value="<?=htmlspecialchars($date[$eventid])?>">
 		                      <label for="name">Event Date</label>
 		                    </div>
 		                  </div>
 		                  <div class="row">
 		                    <div class="input-field col s6">
 		                      <!--<input type="text" class="timepicker" value="<?//=$time[$eventid]?>">-->
-		                      <input type="text" class="timepicker" value="<?=$time[$eventid]?>">
+		                      <input name="updateTime" type="text" class="timepicker" value="<?=$time[$eventid]?>">
 				      <label for="name">Event Time</label>
 		                    </div>
 		                  </div>
 				  <div class="input-field col s6">
-        			    <select name="building">
+        			    <select name="updateBuilding">
            			      <option value="" disabled selected>Choose Building and Room</option>
                 		      <?php	
 				        $brQuery = "select buildingRoom from location natural join event where eventid=$eventid";
@@ -104,7 +106,7 @@ $result = $conn->query($sql);
          			    <label>Building and Room</label>
       				  </div>
       				  <div class="input-field col s6">
-        			    <select name="address">
+        			    <select name="updateAddress">
            			      <option value="" disabled selected>Choose Address (Optional)</option>
                 		      <?php
                 		        $addressQuery = "select address from location";
@@ -122,19 +124,19 @@ $result = $conn->query($sql);
                                   </div>
                                   <div class="row">
                                     <div class="input-field col s6">
-                                      <textarea id="textarea2" name="description" class="materialize-textarea" data-length="120"><?=$description[$eventid]?></textarea>
+                                      <textarea id="textarea2" name="updateDescription" class="materialize-textarea" data-length="120"><?=$description[$eventid]?></textarea>
                                       <label for="textarea2">Description</label>
                                     </div>
                                   </div>
-		                  <!--<button class="btn waves-effect waves-light" type="submit" name="action">Edit
+		                  <button class="btn waves-effect waves-light" type="submit" name="<?="update".$eventid?>">Update
 		                  <i class="material-icons right"></i>
-		                  </button>-->
+		                  </button>
 		                </form>
 		              </div>
 		            </div>
-		            <div class="modal-footer">
-		            <a class="modal-close waves-effect waves-green btn-flat" href="?edit=<?=$eventid?>">Edit</a>
-	 	            </div>
+		            <!--<div class="modal-footer">
+		            <a href="#!" class="modal-close waves-effect waves-green btn-flat">Yup</a>
+	 	            </div>-->
 			  </div>
 			</div>
 		      </span>
@@ -149,7 +151,6 @@ $result = $conn->query($sql);
 	echo "0 results";
 }
 
-echo "status: ID: 20". "Time: ".$time[20]." Date: ".$date[20];
 for($j=1; $j<=max($allEventIds); $j++){
 	$delete = $_GET['delete'];
 	if(isset($delete) && $delete=="$j"){
@@ -164,50 +165,52 @@ for($j=1; $j<=max($allEventIds); $j++){
 		}
 		
 	}
-	$edit = $_GET['edit'];
-	if(isset($edit) && $edit=="$j"){
-		$eventidQuery = "select eventid from event where eventTime = '".$dateTimeRaw[$j]."'";
-		echo "Event ID Query: ".$eventidQuery;
-                $eventidResult = mysqli_query($conn, $eventidQuery);
-		$eventids = mysqli_fetch_assoc($eventidResult);
-		echo "eventids: ".$eventids['eventid'];
-                //if($eventids = mysqli_fetch_assoc($eventidResult)){
-                        $eventid = $eventids['eventid'];
-			echo "eventids: ".$eventids['eventid'];
+
+	if(isset($_POST['update'.$j])){
 			$updateQuery = "update event set";
-			echo "Update Query 1:".$updateQuery;
-			if($_POST['name']!=$title[$j]){
-				$updateName = $_POST['name'];
-				$updateQuery = $updateQuery." event = '".$updateName."'";
+			$updatedName = false;
+			$updatedTime = false;
+			$updatedLocation = false;
+			if($_POST['updateName']!=$title[$j]){
+				$updatedName = true;
+				$updateQuery = $updateQuery." event = '".$_POST['updateName']."'";
 			}
-			echo "Update Query 2:".$updateQuery;
-			if($_POST['date']!=$date[$j] || $_POST['time']!=$time[$j]){
-				echo "Post Date: ".$_GET['date']." Post Time: ".$_GET['time'];
-				$dateTimeFormat = strtotime($_POST['date']." ".$_POST['time']);
+			if($_POST['updateDate']!=$date[$j] || $_POST['updateTime']!=$time[$j]){
+				$updatedTime = true;
+				$dateTimeFormat = strtotime($_POST['updateDate']." ".$_POST['updateTime']);
         			$updateDateTime = date("Y-m-d H:i:s", $dateTimeFormat);
-				$updateQuery = $updateQuery.", eventTime = '".$updateDateTime."'";
+				if($updatedName){
+					$updateQuery = $updateQuery.",";
+				}
+				$updateQuery = $updateQuery." eventTime = '".$updateDateTime."'";
 			}
-			echo "Update Query 3:".$updateQuery;
-		/*	if($br!="null"){
-				if($_POST['building']!=$location[$j]){
-                                	$updateLocation = $_POST['building'];
-					$updateQuery = $updateQuery.", buildingRoom = '".$updateLocation."'";
-                        	}
+			if($_POST['updateBuilding']!=$locationB[$j] || $_POST['updateAddress']!=$locationA[$j]){
+				$updatedLocation=true;
+				if($updatedTime == true || $updatedName==true){
+					 $updateQuery = $updateQuery.",";
+				}
+				if($_POST['building']!=$locationB[$j]){
+					$newLocationQuery = "select locationid from location where buildingRoom = '".$_POST['updateBuilding']."'";
+				}
+				else if($_POST['address']!=$locationA[$j]){
+					$newLocationQuery = "select locationid from location where address = '".$_POST['updateAddress']."'";
+				}
+				$newLocationIdResult = mysqli_query($conn, $newLocationQuery);
+ 		                if($newLocationIds = mysqli_fetch_assoc($newLocationIdResult)){
+					$newLocationId = $newLocationIds['locationid'];
+				}
+				$updateQuery = $updateQuery." locationid = $newLocationId";
+                        }
+			if($_POST['updateDescription']!=$description[$j]){
+				if($updatedLocation==true || $updatedTime==true || $updatedName==true){
+					 $updateQuery = $updateQuery.",";
+				}
+				$updateQuery = $updateQuery." description = '".$_POST['updateDescription']."'";
 			}
-			else if($add!="null"){
-				if($_POST['address']!=$location[$j]){
-                                        $updateLocation = $_POST['building'];
-					$updateQuery = $updateQuery.", address = '".$updateLocation."'";
-                                }
-			}
-		*/
-			echo "Update Query 4:".$updateQuery;
-                        $updateQuery = $updateQuery." where eventid = $eventid";
-			echo "Update Query end: ".$updateQuery;
-                        /*if(!mysqli_query($conn, $updateQuery)){
+                        $updateQuery = $updateQuery." where eventid = $j";
+                        if(!mysqli_query($conn, $updateQuery)){
                                 echo "ERROR".mysqli_error($conn);
-                        }*/
-                //}
+                        }
 	}
 	
 }
@@ -283,7 +286,7 @@ for($j=1; $j<=max($allEventIds); $j++){
 </html>
 <?php
 include('footer.php');
-  if(isset($_POST['add'])){;
+  if(isset($_POST['add'])){
         $name = $_POST['name'];
         $dateTimeFormat = strtotime($_POST['date']." ".$_POST['time']);
         $dateTime = date("Y-m-d H:i:s", $dateTimeFormat);
@@ -295,7 +298,7 @@ include('footer.php');
                 if(!empty($buildingRoom)){
 		  $locationQuery = "select locationid from location where buildingRoom = '$buildingRoom'";
         	  $locationidResult = mysqli_query($conn, $locationQuery);
-        	  while($locationids = mysqli_fetch_assoc($locationidResult)){
+        	  if($locationids = mysqli_fetch_assoc($locationidResult)){
                     $locationid = $locationids["locationid"];
         	  }
                   $insertQuery = "insert into event(eventid, event, eventTime, description, sid, projectid, locationid) values (null, '$name', '$dateTime','$description', null, null, $locationid)";
@@ -303,7 +306,6 @@ include('footer.php');
                 }
 		else if(!empty($address)){
                   $locationQuery = "select locationid from location where address = '$address'";
-			echo $locationQuery;
                   $locationidResult = mysqli_query($conn, $locationidQuery);
                   while($locationids = mysqli_fetch_assoc($locationidResult)){
                     $locationid = $locationids["locationid"];
