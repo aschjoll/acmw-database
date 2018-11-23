@@ -47,10 +47,10 @@ $result = $conn->query($sql);
 		          <h6><?php echo $formattedDateTime[$eventid]?></h6>
 			  <h6><?php echo $location[$eventid]?></h6>
 		          <?php echo $description[$eventid]?><br><br>
-		          <a class="waves-effect waves-light btn-small modal-trigger orange lighten-2" href="#edit" name="<?="edit$i"?>">Edit</a>
+		          <a class="waves-effect waves-light btn-small modal-trigger orange lighten-2" href="#edit<?=$eventid?>">Edit</a>
 		          <a class="waves-effect waves-light btn-small orange lighten-2" href="?delete=<?=$eventid?>">Delete</a>
 		          <!-- Modal Structure -->
-		          <div id="edit" class="modal">
+		          <div id="edit<?=$eventid?>" class="modal">
 		            <div class="modal-content">
 		              <h4>Edit Event</h4>
 		              <div class="row">
@@ -58,33 +58,48 @@ $result = $conn->query($sql);
 	 	                  <div class="row">
 		                    <div class="input-field col s6">
 	 	                      <!--<input id="name" type="text" class="validate" value=<?//=$title[$eventid]?>">-->
-				      <input id="name" type="text" class="validate">
+				      <input id="name" type="text" class="validate" value="<?=$title[$eventid]?>">
 		                      <label for="name">Event Name</label>
 		                    </div>
 		                  </div>
 		                  <div class="row">
 		                    <div class="input-field col s6">
 		                      <!--<input type="text" class="datepicker" value="<?//=htmlspecialchars($date[$eventid])?>">-->
-				      <input type="text" class="datepicker">
+				      <input type="text" class="datepicker" value="<?=htmlspecialchars($date[$eventid])?>">
 		                      <label for="name">Event Date</label>
 		                    </div>
 		                  </div>
 		                  <div class="row">
 		                    <div class="input-field col s6">
 		                      <!--<input type="text" class="timepicker" value="<?//=$time[$eventid]?>">-->
-		                      <input type="text" class="timepicker">
+		                      <input type="text" class="timepicker" value="<?=$time[$eventid]?>">
 				      <label for="name">Event Time</label>
 		                    </div>
 		                  </div>
 				  <div class="input-field col s6">
         			    <select name="building">
            			      <option value="" disabled selected>Choose Building and Room</option>
-                		      <?php
-                		      $buildingQuery = "select buildingRoom from location";
-                		      $buildingResult = mysqli_query($conn, $buildingQuery);
-                		      while($buildings = mysqli_fetch_assoc($buildingResult)){
-                        	      echo "<option>".$buildings["buildingRoom"]."</option>";
-                		      }?>
+                		      <?php	
+				        $brQuery = "select buildingRoom from location natural join event where eventid=$eventid";
+                                        $brResult =  mysqli_query($conn, $brQuery);
+                                        if($brs = mysqli_fetch_assoc($brResult)){
+                                          $br = $brs['buildingRoom'];
+                                        }
+                		        $buildingQuery = "select buildingRoom from location";
+                		        $buildingResult = mysqli_query($conn, $buildingQuery);
+					$addQuery = "select address from location natural join event where eventid=$eventid";
+                                        $addResult =  mysqli_query($conn, $addQuery);
+                                        if($adds = mysqli_fetch_assoc($addResult)){
+                                          $add = $adds['address'];
+                                        }
+                		        while($buildings = mysqli_fetch_assoc($buildingResult)){
+					  if($br!="null" && $buildings["buildingRoom"] == $br){
+					    echo "<option selected=\"selected\">".$buildings["buildingRoom"]."</option>";
+				 	  }
+					  else{
+                        	      	    echo "<option>".$buildings["buildingRoom"]."</option>";
+					  }
+                		        }?>
          			    </select>
          			    <label>Building and Room</label>
       				  </div>
@@ -92,26 +107,28 @@ $result = $conn->query($sql);
         			    <select name="address">
            			      <option value="" disabled selected>Choose Address (Optional)</option>
                 		      <?php
-                		      $addressQuery = "select address from location";
-                                      $addressResult = mysqli_query($conn, $addressQuery);
-                                      while($addresses = mysqli_fetch_assoc($addressResult)){
-                                        echo "<option>".$addresses["address"]."</option>";
+                		        $addressQuery = "select address from location";
+                                        $addressResult = mysqli_query($conn, $addressQuery);
+                                        while($addresses = mysqli_fetch_assoc($addressResult)){
+					  if($add!="null" && $addresses["address"] == $add){
+					    echo "<option selected=\"selected\">".$addresses["address"]."</option>";
+					  }
+					  else{
+                                            echo "<option>".$addresses["address"]."</option>";
+					  }
                                       }?>
                                     </select>
                                     <label>Address</label>
                                   </div>
                                   <div class="row">
                                     <div class="input-field col s6">
-                                      <textarea id="textarea2" name="description" class="materialize-textarea" data-length="120"></textarea>
+                                      <textarea id="textarea2" name="description" class="materialize-textarea" data-length="120"><?=$description[$eventid]?></textarea>
                                       <label for="textarea2">Description</label>
                                     </div>
                                   </div>
 		                  <button class="btn waves-effect waves-light" type="submit" name="action">Edit
 		                  <i class="material-icons right"></i>
 		                  </button>
-                                  <button class="btn waves-effect waves-light" type="submit" name="action">Cancel
-                                  <i class="material-icons right"></i>
-                                  </button>
 		                </form>
 		              </div>
 		            </div>
