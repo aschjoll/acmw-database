@@ -2,12 +2,33 @@
 include('config.php');
 include('header.php');
 
-if ($conn->connect_error) {
-	die("Connection failed: " . $conn->connect_error);
+session_start();
+
+if (!isset($_SESSION['username'])) {
+	$_SESSION['msg'] = "You must log in first";
+        header('location: login.php');
+}
+
+$isOfficer = false;
+$officerQuery = "SELECT sid, username FROM student WHERE officerid != 6";
+$result2 = mysqli_query($conn, $officerQuery);
+if (!$result2)
+{
+	echo "ERROR".mysqli_error($conn);
 }
 
 $sql = "SELECT eventid, event, eventTime, description, locationid, buildingRoom, address FROM event natural join location";
 $result = $conn->query($sql);
+
+while ($officerResult = mysqli_fetch_assoc($result2))
+{	
+	if ($officerResult['username'] == $_SESSION['username'])
+	{
+		$isOfficer = true;
+		$sid = $officerResult['sid'];
+		break;
+	}
+}
 ?>
 
 <html>
@@ -38,7 +59,18 @@ $result = $conn->query($sql);
 		}
 
 		array_push($allEventIds, $eventid);
-
+		
+		$RSVPQuery2 = "select sid, RSVP from attends where eventid = $eventid and RSVP = true";
+		$result3 = mysqli_query($conn, $RSVPQuery2);
+		$RSVPCount = $result3->num_rows;
+		
+		while ($RSVPs = mysqli_fetch_assoc($result3))
+		{
+			if ($sid == $RSVPs['sid'])
+				$RSVPEED[$eventid] = true;
+			else
+				$RSVPEED[$eventid] = false;
+		}
 ?>
 		<div class="row">
 		  <div class="col s12">
@@ -48,10 +80,17 @@ $result = $conn->query($sql);
 		        <div class="divider blue-grey darken-3"></div>
 		          <h6><?php echo $formattedDateTime[$eventid]?></h6>
 			  <h6><?php echo $location[$eventid]?></h6>
-		          <?php echo $description[$eventid]?><br><br>
-		          <a class="waves-effect waves-light btn-small modal-trigger orange lighten-2" href="#edit<?=$eventid?>">Edit</a>
-		          <a class="waves-effect waves-light btn-small orange lighten-2" href="?delete=<?=$eventid?>">Delete</a>
-		          <!-- Modal Structure -->
+		          <?php echo $description[$eventid]?><br>
+			  <?php echo "Number of RSVPs: ".$RSVPCount; ?><br><br>
+		          <?php if ($isOfficer)
+				{
+				echo "<a class=\"waves-effect waves-light btn-small modal-trigger orange lighten-2\" href=\"#edit$eventid\">Edit</a>";
+		          	echo "<a class=\"waves-effect waves-light btn-small orange lighten-2\" href=\"?delete=$eventid\">Delete</a>";
+		          	}
+				if (!$RSVPEED[$eventid])	echo "<a class=\"waves-effect waves-light btn-small orange lighten-2\" href=\"?RSVP=$eventid\">RSVP</a>";
+				else	echo "<a class=\"waves-effect waves-light btn-small orange lighten-2\" href=\"?UNRSVP=$eventid\">Un-RSVP</a>";
+			?>
+			  <!-- Modal Structure -->
 		          <div id="edit<?=$eventid?>" class="modal">
 		            <div class="modal-content">
 		              <h4>Edit Event</h4>
@@ -59,21 +98,18 @@ $result = $conn->query($sql);
 		                <form class="col s12" action="events.php" method="post">
 	 	                  <div class="row">
 		                    <div class="input-field col s6">
-	 	                      <!--<input id="name" type="text" class="validate" value=<?//=$title[$eventid]?>">-->
 				      <input name="updateName" type="text" class="validate" value="<?=$title[$eventid]?>">
 		                      <label for="name">Event Name</label>
 		                    </div>
 		                  </div>
 		                  <div class="row">
 		                    <div class="input-field col s6">
-		                      <!--<input type="text" class="datepicker" value="<?//=htmlspecialchars($date[$eventid])?>">-->
 				      <input name="updateDate" type="text" class="datepicker" value="<?=htmlspecialchars($date[$eventid])?>">
 		                      <label for="name">Event Date</label>
 		                    </div>
 		                  </div>
 		                  <div class="row">
 		                    <div class="input-field col s6">
-		                      <!--<input type="text" class="timepicker" value="<?//=$time[$eventid]?>">-->
 		                      <input name="updateTime" type="text" class="timepicker" value="<?=$time[$eventid]?>">
 				      <label for="name">Event Time</label>
 		                    </div>
@@ -128,7 +164,7 @@ $result = $conn->query($sql);
                                       <label for="textarea2">Description</label>
                                     </div>
                                   </div>
-		                  <button class="btn waves-effect waves-light" type="submit" name="<?="update".$eventid?>">Update
+		                  <button class="btn waves-effect waves-light" type="submit" onclick='window.location.reload(true)' name="<?="update".$eventid?>">Update
 		                  <i class="material-icons right"></i>
 		                  </button>
 		                </form>
@@ -162,16 +198,61 @@ for($j=1; $j<=max($allEventIds); $j++){
 			if(!mysqli_query($conn, $deleteQuery)){
 				echo "ERROR".mysqli_error($conn);
 			}
-		}
-		
+		}	
 	}
+        $RSVP = $_GET['RSVP'];
+	echo $RSVP;
+        if(isset($RSVP) && $RSVP=="$j"){
+                $eventidQuery = "select eventid from event where eventTime = '".$dateTimeRaw[$j]."'";
+                echo $eventidQuery;
+		$eventidResult = mysqli_query($conn, $eventidQuery);
+                if($eventids = mysqli_fetch_assoc($eventidResult))
+		{
+                        $eventid = $eventids['eventid'];
+                        $attendsQuery = "select sid, eventid from attends";
+			if(!$attendsResults = !mysqli_query($conn, $attendsQuery)){
+                                echo "ERROR".mysqli_error($conn);
+                        }
+			while ($attends = mysqli_fetch_assoc($attendsResults))
+			{
+				if ($attends['sid'] == $sid && $attends['eventid'] == $eventid)
+				{
+					$updateQuery = "update attends set RSVP = true where sid = $sid and eventid =  $eventid";
+					break;
+				}
+			}
+			$RSVPQuery = "insert into attends (sid, eventid, RSVP, attend) values ($sid, $eventid, true, false)";
+                        echo $RSVPQuery;
+			if(!mysqli_query($conn, $RSVPQuery)){
+                                echo "ERROR".mysqli_error($conn);
+                        }
+                }
+		$RSVPEED = true;
+        }
+        $UNRSVP = $_GET['UNRSVP'];
+        echo $UNRSVP;
+        if(isset($UNRSVP) && $UNRSVP=="$j"){
+                $eventidQuery = "select eventid from event where eventTime = '".$dateTimeRaw[$j]."'";
+                echo $eventidQuery;
+                $eventidResult = mysqli_query($conn, $eventidQuery);
+                if($eventids = mysqli_fetch_assoc($eventidResult)){
+                        $eventid = $eventids['eventid'];
+                        $UNRSVPQuery = "update attends set RSVP = false where sid = $sid and eventid =  $eventid";
+                        echo $UNRSVPQuery;
+                        if(!mysqli_query($conn, $UNRSVPQuery)){
+                                echo "ERROR".mysqli_error($conn);
+                        }
+                }
+                $RSVPEED = false;
+        }
+
 
 	if(isset($_POST['update'.$j])){
 			$updateQuery = "update event set";
 			$updatedName = false;
 			$updatedTime = false;
 			$updatedLocation = false;
-			if($_POST['updateName']!=$title[$j]){
+			if($_POST['updateName']!=$title[$j]) {
 				$updatedName = true;
 				$updateQuery = $updateQuery." event = '".$_POST['updateName']."'";
 			}
@@ -211,15 +292,18 @@ for($j=1; $j<=max($allEventIds); $j++){
                         if(!mysqli_query($conn, $updateQuery)){
                                 echo "ERROR".mysqli_error($conn);
                         }
+			header("events.php");
 	}
 	
 }
-		
-		
-
 ?>
-
-<a class="btn-floating btn-large waves-effect waves-light modal-trigger orange lighten-2" href="#add"><i class="material-icons">add</i></a>
+<div class="fixed-action-btn">
+<?php if ($isOfficer)
+{
+	echo "<a class=\"btn-floating btn-large waves-effect waves-light modal-trigger orange lighten-2\" href=\"#add\"><i class=\"material-icons\">add</i></a><br>";
+}
+?>
+</div>
 <!-- Modal Structure -->
 <div id="add" class="modal">
 <div class="modal-content">
@@ -274,7 +358,7 @@ for($j=1; $j<=max($allEventIds); $j++){
           <label for="textarea2">Description</label>
         </div>
       </div>
-      <button class="btn waves-effect waves-light" type="submit" name="add">Add
+	<button class="modal-close btn waves-effect waves-light" type="submit" name="add">Add
       <i class="material-icons right"></i>
     </form>
   </div>
