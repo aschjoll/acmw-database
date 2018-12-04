@@ -10,7 +10,7 @@ if (!isset($_SESSION['username'])) {
 }
 
 $isOfficer = false;
-$officerQuery = "SELECT sid, username FROM student WHERE officerid != 6";
+$officerQuery = "SELECT sid, username, officerid FROM student";
 $result2 = mysqli_query($conn, $officerQuery);
 if (!$result2)
 {
@@ -20,15 +20,16 @@ if (!$result2)
 $sql = "SELECT eventid, event, eventTime, description, locationid, buildingRoom, address FROM event natural join location";
 $result = $conn->query($sql);
 
-while ($officerResult = mysqli_fetch_assoc($result2))
-{	
-	if ($officerResult['username'] == $_SESSION['username'])
-	{
-		$isOfficer = true;
-		$sid = $officerResult['sid'];
+while ($studentResult = mysqli_fetch_assoc($result2)){
+	if($studentResult['username'] == $_SESSION['username']){
+		$sid = $studentResult['sid'];
+		if($studentResult['officerid']!=6){
+			$isOfficer=true;
+		}
 		break;
 	}
 }
+
 ?>
 
 <html>
@@ -66,10 +67,13 @@ while ($officerResult = mysqli_fetch_assoc($result2))
 		
 		while ($RSVPs = mysqli_fetch_assoc($result3))
 		{
-			if ($sid == $RSVPs['sid'])
+			if ($sid == $RSVPs['sid']){
 				$RSVPEED[$eventid] = true;
-			else
+			}
+			else{
 				$RSVPEED[$eventid] = false;
+			}
+			break;
 		}
 ?>
 		<div class="row">
@@ -82,13 +86,17 @@ while ($officerResult = mysqli_fetch_assoc($result2))
 			  <h6><?php echo $location[$eventid]?></h6>
 		          <?php echo $description[$eventid]?><br>
 			  <?php echo "Number of RSVPs: ".$RSVPCount; ?><br><br>
-		          <?php if ($isOfficer)
-				{
-				echo "<a class=\"waves-effect waves-light btn-small modal-trigger orange lighten-2\" href=\"#edit$eventid\">Edit</a>";
-		          	echo "<a class=\"waves-effect waves-light btn-small orange lighten-2\" href=\"?delete=$eventid\">Delete</a>";
+		          <?php 
+				if ($isOfficer){
+					echo "<a class=\"waves-effect waves-light btn-small modal-trigger orange lighten-2\" href=\"#edit$eventid\">Edit</a>";
+		          		echo "<a class=\"waves-effect waves-light btn-small orange lighten-2\" href=\"?delete=$eventid\">Delete</a>";
 		          	}
-				if (!$RSVPEED[$eventid])	echo "<a class=\"waves-effect waves-light btn-small orange lighten-2\" href=\"?RSVP=$eventid\">RSVP</a>";
-				else	echo "<a class=\"waves-effect waves-light btn-small orange lighten-2\" href=\"?UNRSVP=$eventid\">Un-RSVP</a>";
+				if (!$RSVPEED[$eventid]){
+					echo "<a class=\"waves-effect waves-light btn-small orange lighten-2\" href=\"?RSVP=$eventid\">RSVP</a>";
+				}
+				else{
+					echo "<a class=\"waves-effect waves-light btn-small orange lighten-2\" href=\"?UNRSVP=$eventid\">Un-RSVP</a>";
+				}
 			?>
 			  <!-- Modal Structure -->
 		          <div id="edit<?=$eventid?>" class="modal">
@@ -201,49 +209,48 @@ for($j=1; $j<=max($allEventIds); $j++){
 		}	
 	}
         $RSVP = $_GET['RSVP'];
-	echo $RSVP;
         if(isset($RSVP) && $RSVP=="$j"){
                 $eventidQuery = "select eventid from event where eventTime = '".$dateTimeRaw[$j]."'";
-                echo $eventidQuery;
 		$eventidResult = mysqli_query($conn, $eventidQuery);
                 if($eventids = mysqli_fetch_assoc($eventidResult))
 		{
                         $eventid = $eventids['eventid'];
                         $attendsQuery = "select sid, eventid from attends";
-			if(!$attendsResults = !mysqli_query($conn, $attendsQuery)){
+			if(!$attendsResults = mysqli_query($conn, $attendsQuery)){
                                 echo "ERROR".mysqli_error($conn);
                         }
 			while ($attends = mysqli_fetch_assoc($attendsResults))
 			{
 				if ($attends['sid'] == $sid && $attends['eventid'] == $eventid)
 				{
-					$updateQuery = "update attends set RSVP = true where sid = $sid and eventid =  $eventid";
+					$RSVPQuery = "update attends set RSVP = true where sid = $sid and eventid =  $eventid";
 					break;
 				}
+				else{
+					$RSVPQuery = "insert into attends (sid, eventid, RSVP, attend) values ($sid, $eventid, true, false)";
+				}
 			}
-			$RSVPQuery = "insert into attends (sid, eventid, RSVP, attend) values ($sid, $eventid, true, false)";
-                        echo $RSVPQuery;
+			
 			if(!mysqli_query($conn, $RSVPQuery)){
                                 echo "ERROR".mysqli_error($conn);
                         }
                 }
 		$RSVPEED = true;
+		header("events.php");
         }
         $UNRSVP = $_GET['UNRSVP'];
-        echo $UNRSVP;
         if(isset($UNRSVP) && $UNRSVP=="$j"){
                 $eventidQuery = "select eventid from event where eventTime = '".$dateTimeRaw[$j]."'";
-                echo $eventidQuery;
                 $eventidResult = mysqli_query($conn, $eventidQuery);
                 if($eventids = mysqli_fetch_assoc($eventidResult)){
                         $eventid = $eventids['eventid'];
                         $UNRSVPQuery = "update attends set RSVP = false where sid = $sid and eventid =  $eventid";
-                        echo $UNRSVPQuery;
                         if(!mysqli_query($conn, $UNRSVPQuery)){
                                 echo "ERROR".mysqli_error($conn);
                         }
                 }
                 $RSVPEED = false;
+		header("events.php");
         }
 
 
