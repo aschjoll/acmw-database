@@ -82,14 +82,13 @@ while ($studentResult = mysqli_fetch_assoc($result2)){
 		      <span class="blue-grey-text text-darken-3">
 		        <h4><?php echo $title[$eventid]?></h4>
 		        <div class="divider blue-grey darken-3"></div>
-		          <h6><?php echo $formattedDateTime[$eventid]?></h6>
-			  <h6><?php echo $location[$eventid]?></h6>
-		          <?php echo $description[$eventid]?><br>
-			  <?php echo "Number of RSVPs: ".$RSVPCount; ?><br><br>
+		          <h6><?php echo $formattedDateTime[$eventid]?></h6><h6 class="right-align"><?php echo "RSVPs: ".$RSVPCount; ?></h6>
+		  <h6><?php echo $location[$eventid]?></h6>
+		  <blockquote><?php echo $description[$eventid]?></blockquote><br><br>
 		          <?php 
 				if ($isOfficer){
 					echo "<a class=\"waves-effect waves-light btn-small modal-trigger orange lighten-2\" href=\"#edit$eventid\">Edit</a>";
-		          		echo "<a class=\"waves-effect waves-light btn-small orange lighten-2\" href=\"?delete=$eventid\">Delete</a>";
+		          		echo "<a class=\"waves-effect waves-light btn-small orange lighten-2\" href=\"events.php?delete=$eventid\">Delete</a>";
 		          	}
 				if (!$RSVPEED[$eventid]){
 					echo "<a class=\"waves-effect waves-light btn-small orange lighten-2\" href=\"?RSVP=$eventid\">RSVP</a>";
