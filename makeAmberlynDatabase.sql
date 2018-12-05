@@ -176,7 +176,7 @@ create table memberof
         foreign key (projectid) 
 		references project(projectid)
         );
-
+*/
 LOAD DATA LOCAL INFILE '/home/assc223/Desktop/acmw-database/textFiles/memberof.txt'
 INTO TABLE memberof
 FIELDS TERMINATED BY '\t';
@@ -186,6 +186,7 @@ create table research
         sid int not null,
         topic varchar(1000) not null,
         professor varchar(50) not null,
+	description varchar(120), 
         primary key (sid, topic),
         foreign key (sid) 
 		references student(sid)
@@ -200,6 +201,7 @@ create table company
         sid int not null,
         company varchar(100) not null,
         position varchar(50) not null,
+	description varchar(120),
         primary key (sid, company),
         foreign key (sid) 
 		references student(sid)
@@ -208,4 +210,4 @@ create table company
 LOAD DATA LOCAL INFILE '/home/assc223/Desktop/acmw-database/textFiles/company.txt'
 INTO TABLE company
 FIELDS TERMINATED BY '\t';
-*/
+

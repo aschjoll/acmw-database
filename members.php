@@ -10,7 +10,7 @@ if (!isset($_SESSION['username'])) {
 }
 
 $sql = "SELECT sid, fname, lname, email, gender, year, title, officerID, major FROM student natural join gender natural join year natural join officer natural join major";
-$result = $conn->query($sql);
+$result = $conn->query($sql); 
 
 ?>
 
@@ -36,6 +36,13 @@ if ($result->num_rows > 0) {
 		$major[$sid] = $row['major'];
 	
 		array_push($allSIDs, $sid);
+		$researchQuery = "SELECT * FROM reserach WHERE sid = $sid";
+		$researchResult = mysqli_query($conn, $researchQuery);
+		while ($researchRow = mysqli_fetch_assoc($researchResult))
+		{
+			echo "Research Topic: ".$researchRow['topic'];
+			echo "Description: ".$companyRow['description'];
+		}
 ?>
 		<div class="row">
 		  <div class="col s12">
