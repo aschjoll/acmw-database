@@ -208,7 +208,7 @@ if ($result->num_rows > 0) {
                                   </div>
                                   <div class="row">
                                     <div class="input-field col s6">
-                                      <input name="position" type="text" class="vslidate">
+                                      <input name="position" type="text" class="validate">
                                       <label for="position">Position</label>
                                     </div>
                                   </div>
@@ -225,12 +225,6 @@ if ($result->num_rows > 0) {
                               </div>
                             </div>
                           </div>
-
-
-
-
-
-
 
 		    </div>
 	          </div>
@@ -334,6 +328,43 @@ if ($result->num_rows > 0) {
                         }
 			header("profile.php");
 	}
+        if(isset($_POST['addResearch']){
+                $topic = $_POST['topic'];
+                $pname = $_POST['pname'];
+                $description = $_POST['description'];
+
+                if(empty($topic) || empty($pname)){
+                        echo "Topic and Research Mentor are required";
+                }
+		else{
+			if(empty($description){
+				$description = null;
+			}
+                       	$insertResearchQuery = "insert into research (sid, topic, professor, description) values ('".$topic."'".", '$pname', '$description')";
+			if(!mysqli_query($conn, $insertResearchQuery)){
+                                echo "ERROR".mysqli_error($conn);
+                        }
+		}
+        }
+
+        if(isset($_POST['addCompany']){
+                $company = $_POST['cname'];
+                $position = $_POST['position'];
+                $description = $_POST['description'];
+
+                if(empty($company) || empty($position)){
+                        echo "Company and Position are required";
+                }
+                else{
+                        if(empty($description){
+                                $description = null;
+                        }
+                        $insertCompanyQuery = "insert into company (sid, company, position, description) values ('".$company."'".", '$position', '$description')";
+                        if(!mysqli_query($conn, $insertCompanyQuery)){
+                                echo "ERROR".mysqli_error($conn);
+                        }
+                }
+        }
 
 include('footer.php');
 
