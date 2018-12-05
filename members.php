@@ -46,10 +46,9 @@ if ($result->num_rows > 0) {
 		          <h6><?php echo $major[$sid]?></h6>
 			  <h6><?php echo $gender[$sid]?></h6>
 			  <h6><?php echo $year[$sid]?></h6>
-			  <?php echo $officerID[$sid];
-				if ($officerID[$sid] != '6') {?>
-			    <h6><?php$officerTitle[$sid]?></h6>
-			  <?php } ?>
+			  <?php if($officerID[$sid] != '6') {
+			    		echo "<h6>".$officerTitle[$sid]."</h6>";
+			   } ?>
 			  <h6><?php echo $email[$sid]?></h6>
 			</div>
 		      </span>

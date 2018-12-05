@@ -85,10 +85,10 @@ while($raceCount = mysqli_fetch_assoc($raceCountResult)){
 		$hispanic="(Hispanic)";
 	}
 	$percentage = ($raceCount['num']/$memberCountResult->num_rows)*100;
-	echo $raceCount['race'].": ".$raceCount['num']."--------".$percentage."%<br>";
+	echo $raceCount['race']." ".$hispanic.": ".$raceCount['num']."--------".$percentage."%<br>";
 }
 echo "<br>";
-
+include('footer.php');
 
 ?>
 

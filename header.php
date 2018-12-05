@@ -15,7 +15,7 @@
   
 <!-- Dropdown Structure -->
 <ul id="dropdown1" class="dropdown-content">
-  <li><a href="#!">My Profile</a></li>
+  <li><a href="profile.php">My Profile</a></li>
   <li class="divider"></li>
   <li><a href="?logout='1'">Logout</a><li>
 </ul>
