@@ -78,50 +78,52 @@ while ($studentResult = mysqli_fetch_assoc($result2)){
 ?>
 		<div class="row">
 		  <div class="col s12">
-		    <div class="card-panel blue lighten-4">
+		    <div class="card-panel white">
 		      <span class="blue-grey-text text-darken-3">
 		        <h4><?php echo $title[$eventid]?></h4>
 		        <div class="divider blue-grey darken-3"></div>
-		          <h6><?php echo $formattedDateTime[$eventid]?></h6><h6 class="right-align"><?php echo "RSVPs: ".$RSVPCount; ?></h6>
-		  <h6><?php echo $location[$eventid]?></h6>
-		  <blockquote><?php echo $description[$eventid]?></blockquote><br><br>
+		          <h6><?php echo $formattedDateTime[$eventid];?></h6>
+		  <h6><?php echo $location[$eventid];?></h6>
+		  <h6><?php echo "RSVPs: ".$RSVPCount; ?></h6>
+		  <blockquote><?php echo $description[$eventid];?></blockquote><br><br>
 		          <?php 
 				if ($isOfficer){
-					echo "<a class=\"waves-effect waves-light btn-small modal-trigger orange lighten-2\" href=\"#edit$eventid\">Edit</a>";
-		          		echo "<a class=\"waves-effect waves-light btn-small orange lighten-2\" href=\"events.php?delete=$eventid\">Delete</a>";
+					echo "<a class=\"waves-effect waves-light btn-small modal-trigger blue-grey lighten-5 grey-text text-darken-1\" href=\"#edit$eventid\">Edit</a>";
+		          		echo "<a class=\"waves-effect waves-light btn-small blue-grey lighten-5 grey-text text-darken-1\" href=\"events.php?delete=$eventid\">Delete</a>";
 		          	}
 				if (!$RSVPEED[$eventid]){
-					echo "<a class=\"waves-effect waves-light btn-small orange lighten-2\" href=\"?RSVP=$eventid\">RSVP</a>";
+					echo "<a class=\"waves-effect waves-light btn-small blue-grey lighten-5 grey-text text-darken-1\" href=\"?RSVP=$eventid\">RSVP</a>";
 				}
 				else{
-					echo "<a class=\"waves-effect waves-light btn-small orange lighten-2\" href=\"?UNRSVP=$eventid\">Un-RSVP</a>";
+					echo "<a class=\"waves-effect waves-light btn-small blue-grey lighten-5 grey-text text-darken-1\" href=\"?UNRSVP=$eventid\">Un-RSVP</a>";
 				}
 			?>
 			  <!-- Modal Structure -->
 		          <div id="edit<?=$eventid?>" class="modal">
-		            <div class="modal-content">
+		            <div class="modal-content center-align">
 		              <h4>Edit Event</h4>
 		              <div class="row">
 		                <form class="col s12" action="events.php" method="post">
 	 	                  <div class="row">
-		                    <div class="input-field col s6">
+		                    <div class="input-field col s12">
 				      <input name="updateName" type="text" class="validate" value="<?=$title[$eventid]?>">
 		                      <label for="name">Event Name</label>
 		                    </div>
 		                  </div>
 		                  <div class="row">
-		                    <div class="input-field col s6">
+		                    <div class="input-field col s12">
 				      <input name="updateDate" type="text" class="datepicker" value="<?=htmlspecialchars($date[$eventid])?>">
 		                      <label for="name">Event Date</label>
 		                    </div>
 		                  </div>
 		                  <div class="row">
-		                    <div class="input-field col s6">
+		                    <div class="input-field col s12">
 		                      <input name="updateTime" type="text" class="timepicker" value="<?=$time[$eventid]?>">
 				      <label for="name">Event Time</label>
 		                    </div>
 		                  </div>
-				  <div class="input-field col s6">
+			      <h6>*Please choose a building and room OR an address, but do not choose both.</h6><br>
+				  <div class="input-field col s12">
         			    <select name="updateBuilding">
            			      <option value="" disabled selected>Choose Building and Room</option>
                 		      <?php	
@@ -139,47 +141,53 @@ while ($studentResult = mysqli_fetch_assoc($result2)){
                                         }
                 		        while($buildings = mysqli_fetch_assoc($buildingResult)){
 					  if($br!="null" && $buildings["buildingRoom"] == $br){
-					    echo "<option selected=\"selected\">".$buildings["buildingRoom"]."</option>";
-				 	  }
+					    	if($building["buildingRoom"]!="null"){
+							echo "<option selected=\"selected\">".$buildings["buildingRoom"]."</option>";
+				 	    	}
+					}
 					  else{
-                        	      	    echo "<option>".$buildings["buildingRoom"]."</option>";
-					  }
+					    	if($building["buildingRoom"]!="null"){
+                        	      	    		echo "<option>".$buildings["buildingRoom"]."</option>";
+					    	}
+					}
                 		        }?>
          			    </select>
          			    <label>Building and Room</label>
       				  </div>
-      				  <div class="input-field col s6">
+      				  <div class="input-field col s12">
         			    <select name="updateAddress">
            			      <option value="" disabled selected>Choose Address (Optional)</option>
                 		      <?php
                 		        $addressQuery = "select address from location";
                                         $addressResult = mysqli_query($conn, $addressQuery);
                                         while($addresses = mysqli_fetch_assoc($addressResult)){
+						echo $addresses['address'];
 					  if($add!="null" && $addresses["address"] == $add){
-					    echo "<option selected=\"selected\">".$addresses["address"]."</option>";
+						if($adresses["address"]!="null"){
+					    		echo "<option selected=\"selected\">".$addresses["address"]."</option>";
+					  	}
 					  }
 					  else{
-                                            echo "<option>".$addresses["address"]."</option>";
+						 if($adresses['address']!="null"){
+                                            		echo "<option>".$addresses["address"]."</option>";
+						}  
 					  }
                                       }?>
                                     </select>
                                     <label>Address</label>
                                   </div>
                                   <div class="row">
-                                    <div class="input-field col s6">
+                                    <div class="input-field col s12">
                                       <textarea id="textarea2" name="updateDescription" class="materialize-textarea" data-length="120"><?=$description[$eventid]?></textarea>
                                       <label for="textarea2">Description</label>
                                     </div>
                                   </div>
-		                  <button class="btn waves-effect waves-light" type="submit" onclick='window.location.reload(true)' name="<?="update".$eventid?>">Update
+		                  <button class="btn waves-effect waves-light blue-grey lighten-5 grey-text text-darken-1" type="submit" onclick='window.location.reload(true)' name="<?="update".$eventid?>">Update
 		                  <i class="material-icons right"></i>
 		                  </button>
 		                </form>
 		              </div>
 		            </div>
-		            <!--<div class="modal-footer">
-		            <a href="#!" class="modal-close waves-effect waves-green btn-flat">Yup</a>
-	 	            </div>-->
 			  </div>
 			</div>
 		      </span>
@@ -306,73 +314,74 @@ for($j=1; $j<=max($allEventIds); $j++){
 <div class="fixed-action-btn">
 <?php if ($isOfficer)
 {
-	echo "<a class=\"btn-floating btn-large waves-effect waves-light modal-trigger orange lighten-2\" href=\"#add\"><i class=\"material-icons\">add</i></a><br>";
+	echo "<a class=\"btn-floating btn-large waves-effect waves-light modal-trigger blue-grey lighten-5\" href=\"#add\"><i class=\"material-icons grey-text text-darken-1t\">add</i></a><br>";
 }
 ?>
 </div>
 <!-- Modal Structure -->
 <div id="add" class="modal">
-<div class="modal-content">
+<div class="modal-content center-align">
 <h4>Add Event</h4>
   <div class="row">
     <form class="col s12" action="events.php" method="post">
       <div class="row">
-	<div class="input-field col s6">
+	<div class="input-field col s12">
           <input name="name" type="text" class="validate">
 	  <label for="name">Event Name</label>
         </div>
       </div>
       <div class="row">
-        <div class="input-field col s6">
+        <div class="input-field col s12">
           <input name="date" type="text" class="datepicker">
 	  <label for="name">Event Date</label>
         </div>
       </div>
       <div class="row">
-        <div class="input-field col s6">
+        <div class="input-field col s12">
 	  <input name="time" type="text" class="timepicker">
 	  <label for="name">Event Time</label>
         </div>
       </div>
-      <div class="input-field col s6">
+      <h6>*Please choose a building and room OR an address, but do not choose both.</h6><br>
+      <div class="input-field col s12">
         <select name="building">
            <option value="" disabled selected>Choose Building and Room</option>
 		<?php
 		$buildingQuery = "select buildingRoom from location";
                 $buildingResult = mysqli_query($conn, $buildingQuery);
                 while($buildings = mysqli_fetch_assoc($buildingResult)){
-			echo "<option>".$buildings["buildingRoom"]."</option>";
+			if($buildings["buildingRoom"]!="null"){
+				echo "<option>".$buildings["buildingRoom"]."</option>";
+			}
                 }?>
          </select>
          <label>Building and Room</label>
       </div>
-      <div class="input-field col s6">
+      <div class="input-field col s12">
         <select name="address">
            <option value="" disabled selected>Choose Address (Optional)</option>
                 <?php
                 $addressQuery = "select address from location";
                 $addressResult = mysqli_query($conn, $addressQuery);
                 while($addresses = mysqli_fetch_assoc($addressResult)){
-                        echo "<option>".$addresses["address"]."</option>";
+                        if($adresses["address"]!="null"){
+				echo "<option>".$addresses["address"]."</option>";
+			}
                 }?>
          </select>
          <label>Address</label>
       </div>
       <div class="row">
-        <div class="input-field col s6">
+        <div class="input-field col s12">
           <textarea id="textarea2" name="description" class="materialize-textarea" data-length="120"></textarea>
           <label for="textarea2">Description</label>
         </div>
       </div>
-	<button class="modal-close btn waves-effect waves-light" type="submit" name="add">Add
+	<button class="modal-close btn waves-effect waves-light blue-grey lighten-5 grey-text text-darken-1" type="submit" name="add">Add
       <i class="material-icons right"></i>
     </form>
   </div>
-
 </div>
-<!-- <div class="modal-footer">
-<a href="#!" class="modal-close waves-effect waves-green btn-flat">Yup</a>
-</div>-->
 </html>
 <?php
 include('footer.php');

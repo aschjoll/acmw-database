@@ -1,3 +1,8 @@
 \n 	Computer Science	CS
 \n	Information Communication Technology	ICT
 \n	Economics	ECO
+\n	Business	BUS
+\n	Computer Engineering	CompE
+\n	Mechanical Engineering	MechE
+\n 	Chemical Engineering	ChemE
+\n 	Mathematics	MA
