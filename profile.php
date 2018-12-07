@@ -31,54 +31,154 @@ if ($result->num_rows > 0) {
 	$major = $row['major'];
 	$race = $row['race'];
 	$hispanic = $row['hispanic'];
+        $researchQuery = "SELECT * FROM research WHERE sid = $sid";
+        $researchResult = mysqli_query($conn, $researchQuery);
+        $companyQuery = "SELECT * FROM company WHERE sid = $sid";
+        $companyResult = mysqli_query($conn, $companyQuery);
 	
 	array_push($allSIDs, $sid);
 ?>
 		<div class="row">
 		  <div class="col s12">
-		    <div class="card-panel blue lighten-4">
+		    <div class="card-panel white">
 		      <span class="blue-grey-text text-darken-3">
 		        <h4><?php echo $fullName?></h4>
 		        <div class="divider blue-grey darken-3"></div>
+			  <h5>General Information</h5>
 		          <h6><?php echo $major?></h6>
 			  <h6><?php echo $gender?></h6>
 			  <h6><?php echo $year?></h6>
 			  <?php if($officerID != '6') {
 			    		echo "<h6>".$officerTitle."</h6>";
 			   } ?>
-			  <h6><?php echo $email?></h6>
+			  <h6><?php echo $email?></h6><br>
+			  <a class = "waves-effect waves-light btn-small modal-trigger blue-grey lighten-5 grey-text text-darken-1 grey-text text-darken-1" href="#edit" >Edit</a><br>
+
+<?php
+                while ($researchRow = mysqli_fetch_assoc($researchResult))
+                {
+			$researchTopic = $researchRow['topic'];
+			$researchMent = $researchRow['professor'];
+			$researchDesc = $researchRow['description'];
+                        echo "<br><div class=\"divider blue-grey darken-3\"></div>";
+                        echo "<h5>Research"."<br>";
+                        echo "<h6>Research Topic: ".$researchRow['topic']."</h6>";
+                        echo "<h6>Research Mentor: ".$researchRow['professor']."</h6>";
+                        echo "<h6>Description: ".$researchRow['description']."</h6>";
+		}?>
+                     <br><a class = "waves-effect waves-light btn-small modal-trigger blue-grey lighten-5 grey-text text-darken-1" href="#editResearch" >Edit</a>
+                     <a class = "waves-effect waves-light btn-small modal-trigger blue-grey lighten-5 grey-text text-darken-1" href="profile.php?delete=research" >Delete</a><br>
+
+                <?php    
+                while ($companyRow = mysqli_fetch_assoc($companyResult))
+                {
+			$companyName = $companyRow['company'];
+			$companyPos = $companyRow['position'];
+			$companyDesc = $companyRow['description'];
+                        echo "<br><div class=\"divider blue-grey darken-3\"></div>";
+                        echo "<h5>Professional Experience"."<br>";
+                        echo "<h6>Company: ".$companyRow['company']."</h6>";
+                        echo "<h6>Position: ".$companyRow['position']."</h6>";
+                        echo "<h6>Description: ".$companyRow['description']."</h6>";
+                }?>
+                     <br><a class = "waves-effect waves-light btn-small modal-trigger blue-grey lighten-5 grey-text text-darken-1" href="#editCompany" >Edit</a>
+                     <a class = "waves-effect waves-light btn-small modal-trigger blue-grey lighten-5 grey-text text-darken-1" href="profile.php?delete=company" >Delete</a><br>
+
 			</div>
 		      </span>
-		     <a class = "waves-effect waves-light btn-small modal-trigger orange lighten-2" href="#edit" >Edit</a>
-		     <a class = "waves-effect waves-light btn-small modal-trigger orange lighten-2" href="#research">Add Research</a>
-		     <a class = "waves-effect waves-light btn-small modal-trigger orange lighten-2" href="#company" >Add Company</a>
-		    
+		     <a class = "waves-effect waves-light btn-small modal-trigger blue-grey lighten-5 grey-text text-darken-1" href="#research">Add Research</a>
+		     <a class = "waves-effect waves-light btn-small modal-trigger blue-grey lighten-5 grey-text text-darken-1" href="#company" >Add Company</a>
+
+                        <!-- Modal Structure EditResearch-->
+                          <div id="editResearch" class="modal">
+                            <div class="modal-content center-align">
+                              <h4>Edit Research</h4>
+                              <div class="row">
+                                <form class="col s12" action="profile.php" method="post">
+                                  <div class="row">
+                                    <div class="input-field col s12">
+                                      <input name="updateTopic" type="text" class="validate" value="<?=$researchTopic?>">
+                                      <label for="topic">Topic</label>
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="input-field col s12">
+                                      <input name="updateMentor" type="text" class="validate" value="<?=$researchMent?>">
+                                      <label for="ment">Research Mentor</label>
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="input-field col s12">
+                                      <textarea name="updateDesc" type="text" class="materialize-textarea" data-length="120"><?=$researchDesc?></textarea>
+                                      <label for="desc">Description</label>
+                                    </div>
+                                  </div>
+				  <button class="btn waves-effect waves-light blue-grey lighten-5 grey-text text-darken-1" type="submit" name="updateResearch">Update
+                                  <i class="material-icons right"></i>
+                                  </button>
+				</form>
+			       </div>
+			      </div>
+			     </div>
+
+                        <!-- Modal Structure EditCompany-->
+                          <div id="editCompany" class="modal">
+                            <div class="modal-content center-align">
+                              <h4>Edit Professional Experience</h4>
+                              <div class="row">
+                                <form class="col s12" action="profile.php" method="post">
+                                  <div class="row">
+                                    <div class="input-field col s12">
+                                      <input name="updateComp" type="text" class="validate" value="<?=$companyName?>">
+                                      <label for="comp">Company</label>
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="input-field col s12">
+                                      <input name="updatePos" type="text" class="validate" value="<?=$companyPos?>">
+                                      <label for="position">Position</label>
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="input-field col s12">
+                                      <textarea name="updateCDesc" type="text" class="materialize-textarea" data-length="120"><?=$companyDesc?></textarea>
+                                      <label for="email">Description</label>
+                                    </div>
+                                  </div>
+                                  <button class="btn waves-effect waves-light blue-grey lighten-5 grey-text text-darken-1" type="submit" name="updateCompany">Update
+                                  <i class="material-icons right"></i>
+                                  </button>
+                                </form>
+                               </div>
+                              </div>
+                             </div>
+
 		 	<!-- Modal Structure Edit-->
                           <div id="edit" class="modal">
-                            <div class="modal-content">
+                            <div class="modal-content center-align">
                               <h4>Edit Profile</h4>
                               <div class="row">
                                 <form class="col s12" action="profile.php" method="post">
                                   <div class="row">
-                                    <div class="input-field col s6">
+                                    <div class="input-field col s12">
                                       <input name="updateFname" type="text" class="validate" value="<?=$fname?>">
                                       <label for="fname">First Name</label>
                                     </div>
                                   </div>
                                   <div class="row">
-                                    <div class="input-field col s6">
+                                    <div class="input-field col s12">
                                       <input name="updateLname" type="text" class="validate" value="<?=$lname?>">
                                       <label for="lname">Last Name</label>
                                     </div>
                                   </div>
                                   <div class="row">
-                                    <div class="input-field col s6">
+                                    <div class="input-field col s12">
                                       <input name="updateEmail" type="text" class="validate" value="<?=$email?>">
                                       <label for="email">Email</label>
                                     </div>
                                   </div>
                                   <div class="row">
-                                    <div class="input-field col s6">
+                                    <div class="input-field col s12">
 					<?php
 		//echo "Gender";
 		echo "<div class=\"form-group\">";
@@ -156,7 +256,7 @@ if ($result->num_rows > 0) {
 		?>
                                     </div>
                                   </div>
-                                  <button class="btn waves-effect waves-light" type="submit" name="update">Update
+                                  <button class="btn waves-effect waves-light blue-grey lighten-5 grey-text text-darken-1" type="submit" name="update">Update
                                   <i class="material-icons right"></i>
                                   </button>
 				</form>
@@ -165,29 +265,29 @@ if ($result->num_rows > 0) {
 			  </div>
 			<!-- Modal Structure Research-->
                           <div id="research" class="modal">
-                            <div class="modal-content">
-                              <h4>Edit Profile</h4>
+                            <div class="modal-content center-align">
+                              <h4>Edit Research</h4>
                               <div class="row">
                                 <form class="col s12" action="profile.php" method="post">
                                   <div class="row">
-                                    <div class="input-field col s6">
+                                    <div class="input-field col s12">
                                       <input name="topic" type="text" class="validate">
                                       <label for="topic">Topic</label>
                                     </div>
                                   </div>
                                   <div class="row">
-                                    <div class="input-field col s6">
+                                    <div class="input-field col s12">
                                       <input name="pname" type="text" class="validate">
                                       <label for="pname">Research Mentor</label>
                                     </div>
                                   </div>
                                   <div class="row">
-        			    <div class="input-field col s6">
+        			    <div class="input-field col s12">
           			      <textarea id="textarea2" name="description" class="materialize-textarea" data-length="120"></textarea>
           			      <label for="textarea2">Description</label>
         			    </div>
       				  </div>
-                                  <button class="btn waves-effect waves-light" type="submit" name="addResearch">Add Research
+                                  <button class="btn waves-effect waves-light blue-grey lighten-5 grey-text text-darken-1" type="submit" name="addResearch">Add Research
                                   <i class="material-icons right"></i>
                                   </button>
                                 </form>
@@ -196,29 +296,29 @@ if ($result->num_rows > 0) {
                           </div>
                         <!-- Modal Structure Company-->
                           <div id="company" class="modal">
-                            <div class="modal-content">
-                              <h4>Edit Profile</h4>
+                            <div class="modal-content center-align">
+                              <h4>Edit Professional Experience</h4>
                               <div class="row">
                                 <form class="col s12" action="profile.php" method="post">
                                   <div class="row">
-                                    <div class="input-field col s6">
+                                    <div class="input-field col s12">
                                       <input name="cname" type="text" class="validate">
                                       <label for="topic">Company</label>
                                     </div>
                                   </div>
                                   <div class="row">
-                                    <div class="input-field col s6">
+                                    <div class="input-field col s12">
                                       <input name="position" type="text" class="validate">
                                       <label for="position">Position</label>
                                     </div>
                                   </div>
                                   <div class="row">
-                                    <div class="input-field col s6">
+                                    <div class="input-field col s12">
                                       <textarea id="textarea3" name="description" class="materialize-textarea" data-length="120"></textarea>
                                       <label for="textarea3">Description</label>
                                     </div>
                                   </div>
-                                  <button class="btn waves-effect waves-light" type="submit" name="addComp">Add Company
+                                  <button class="btn waves-effect waves-light blue-grey lighten-5 grey-text text-darken-1" type="submit" name="addComp">Add Company
                                   <i class="material-icons right"></i>
                                   </button>
                                 </form>
@@ -322,13 +422,12 @@ if ($result->num_rows > 0) {
                                 $updateQuery = $updateQuery." email = '".$_POST['updateEmail']."'";
                         }
                         $updateQuery = $updateQuery." where sid = $sid";
-			echo $updateQuery;
                         if(!mysqli_query($conn, $updateQuery)){
                                 echo "ERROR".mysqli_error($conn);
                         }
 			header("profile.php");
 	}
-        if(isset($_POST['addResearch']){
+        if(isset($_POST['addResearch'])){
                 $topic = $_POST['topic'];
                 $pname = $_POST['pname'];
                 $description = $_POST['description'];
@@ -337,17 +436,17 @@ if ($result->num_rows > 0) {
                         echo "Topic and Research Mentor are required";
                 }
 		else{
-			if(empty($description){
+			if(empty($description)){
 				$description = null;
 			}
-                       	$insertResearchQuery = "insert into research (sid, topic, professor, description) values ('".$topic."'".", '$pname', '$description')";
+                       	$insertResearchQuery = "insert into research (sid, topic, professor, description) values ($sid,"." '".$topic."'".", '$pname', '$description')";
 			if(!mysqli_query($conn, $insertResearchQuery)){
                                 echo "ERROR".mysqli_error($conn);
                         }
 		}
         }
 
-        if(isset($_POST['addCompany']){
+        if(isset($_POST['addComp'])){
                 $company = $_POST['cname'];
                 $position = $_POST['position'];
                 $description = $_POST['description'];
@@ -356,15 +455,82 @@ if ($result->num_rows > 0) {
                         echo "Company and Position are required";
                 }
                 else{
-                        if(empty($description){
+                        if(empty($description)){
                                 $description = null;
                         }
-                        $insertCompanyQuery = "insert into company (sid, company, position, description) values ('".$company."'".", '$position', '$description')";
+                        $insertCompanyQuery = "insert into company (sid, company, position, description) values ($sid,'".$company."'".", '$position', '$description')";
                         if(!mysqli_query($conn, $insertCompanyQuery)){
                                 echo "ERROR".mysqli_error($conn);
                         }
                 }
         }
+	
+	if(isset($_POST['updateResearch'])){
+                        $updateQuery = "update research set";
+                        $updatedTopic = false;
+                        $updatedMent = false;
+                        $updatedDesc = false;
+                        if($_POST['updateTopic']!=$researchTopic) {
+                                $updatedTopic = true;
+                                $updateQuery = $updateQuery." topic = '".$_POST['updateTopic']."'";
+                        }
+                        if($_POST['updateTopic']!=$researchMent) {
+                                if($updatedTopic == true){
+                                         $updateQuery = $updateQuery.",";
+                                }
+                                $updatedMent = true;
+                                $updateQuery = $updateQuery." professor = '".$_POST['updateMentor']."'";
+                        }
+                        if($_POST['updateDesc']!=$researchDec) {
+                                if($updatedMent == true || $updatedTopic == true){
+                                         $updateQuery = $updateQuery.",";
+                                }
+                                $updatedDesc = true;
+                                $updateQuery = $updateQuery." description = '".$_POST['updateDesc']."'";
+                        }
+			$updateQuery = $updateQuery." where sid = $sid";
+                        if(!mysqli_query($conn, $updateQuery)){
+                                echo "ERROR".mysqli_error($conn);
+                        }
+	}
+
+        if(isset($_POST['updateCompany'])){
+                        $updateQuery = "update company set";
+                        $updatedCname = false;
+                        $updatedPos = false;
+                        $updatedDesc = false;
+                        if($_POST['updateComp']!=$companyName) {
+                                $updatedCname = true;
+                                $updateQuery = $updateQuery." company = '".$_POST['updateComp']."'";
+                        }
+                        if($_POST['updatePos']!=$companyPos) {
+                                if($updatedCname == true){
+                                         $updateQuery = $updateQuery.",";
+                                }
+                                $updatedPos = true;
+                                $updateQuery = $updateQuery." position = '".$_POST['updatePos']."'";
+                        }
+                        if($_POST['updateDesc']!=$companyDesc) {
+                                if($updatedCname == true || $updatedPos == true){
+                                         $updateQuery = $updateQuery.",";
+                                }
+                                $updatedDesc = true;
+                                $updateQuery = $updateQuery." description = '".$_POST['updateCDesc']."'";
+                        }
+                        $updateQuery = $updateQuery." where sid = $sid";
+                        if(!mysqli_query($conn, $updateQuery)){
+                                echo "ERROR".mysqli_error($conn);
+                        }
+        }
+
+	if(isset($_GET['delete']) && $_GET['delete'] =="research"){
+		$deleteQuery = "delete from research where sid = $sid and topic=$researchTopic";
+		if(!mysqli_query($conn, $insertCompanyQuery)){
+                	echo "ERROR".mysqli_error($conn);
+                }
+	}
+	
+                
 
 include('footer.php');
 
@@ -376,7 +542,7 @@ $conn->close();
 width: 100%;
 height: 75%
 }
-.modal { width: 60% !important ; height: 66% !important ; }
+.modal { width: 40% !important ; height: 66% !important ; }
 </style>
 
 <script>
