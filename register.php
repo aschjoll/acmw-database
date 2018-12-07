@@ -89,14 +89,14 @@ if (isset($_POST['register'])) {
     	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
  	<title>Register for ACM-W website Access</title>
 </head>
-<body id="LoginForm">
+<body class="deep-purple lighten-2" id="LoginForm">
   <div class="container">
     <div class="row valign-wrapper">
       <div class="col s4 valign">
-        <div class="card deep-purple lighten-2 white-text">
+        <div class="card white black-text">
           <div class="container">
             <div class="card-content center-align">
-              <span class="card-title white-text">Register</span>
+              <span class="card-title black-text">Register</span>
               <p>Please enter your information</p>
             </div>
 	    <div class="white-text">
@@ -186,8 +186,10 @@ if (isset($_POST['register'])) {
 		}
 		echo "\n";
 		?>
-		<br><button type="submit" class="btn blue-grey" name="register">Register</button><br><br>
+		<div class="black-text">
+		<br><button type="submit" class="btn blue-grey lighten-4 grey-text text-darken-1" name="register">Register</button><br><br>
   	        Already a member? <a href="login.php">Sign in</a><br><br>
+		</div>
 	      </div>
 	      </form>
             </div>
@@ -195,6 +197,6 @@ if (isset($_POST['register'])) {
         </div>
       </div>
     </div>
-  </div>
+</div>
 </body>
 </html>

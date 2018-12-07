@@ -45,14 +45,14 @@ if (isset($_POST['login'])) {
     	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
        	<title>Login to the ACM-W Website</title>
 </head>
-<body id="LoginForm">
+<body class = "deep-purple lighten-2" id="LoginForm">
        <div class="container">
          <div class="row valign-wrapper">
            <div class="col s6 offset-s3 valign">
-             <div class="card deep-purple lighten-2 white-text">
+             <div class="card white black-text">
 	       <div class="container">
                  <div class="card-content center-align">
-           	  <span class="card-title white-text">Login</span>
+           	  <span class="card-title black-text">Login</span>
         	  <p>Please enter your information</p>
         	 </div>
         	 <form id="Login" action="login.php" method="post">
@@ -68,7 +68,7 @@ if (isset($_POST['login'])) {
                   }
                   echo "\n";
                 ?>
-                  <br><button type="submit" class="btn orange blue-grey" name="login">Login</button><br>
+                  <br><button type="submit" class="btn blue-grey lighten-4 grey-text text-darken-1y" name="login">Login</button><br>
 		  <p>Not yet a member? <a href="register.php">Sign up</a></p><br>
 		</form>
 		</div>
