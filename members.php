@@ -4,12 +4,7 @@ include('header.php');
 
 session_start();
 
-if (!isset($_SESSION['username'])) {
-	$_SESSION['msg'] = "You must log in first";
-        header('location: login.php');
-}
-
-$sql = "SELECT sid, fname, lname, email, gender, year, title, officerID, major FROM student natural join gender natural join year natural join officer natural join major";
+$sql = "SELECT sid, fname, lname, email, gender, year, title, officerID, major FROM student natural join gender natural join year natural join officer natural join major ORDER BY officerID";
 $result = $conn->query($sql); 
 
 ?>
@@ -46,7 +41,7 @@ if ($result->num_rows > 0) {
 ?>
 		<div class="row">
 		  <div class="col s12">
-		    <div class="card-panel blue lighten-4">
+		    <div class="card-panel white">
 		      <span class="blue-grey-text text-darken-3">
 		        <h4><?php echo $fullName?></h4>
 		        <div class="divider blue-grey darken-3"></div>

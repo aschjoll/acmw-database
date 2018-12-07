@@ -33,31 +33,32 @@
 	      <div class="center">
 	    	<h4>Welcome to the</h4><br>
 		<div class="divider"></div>
-		<span class="deep-purple-text text-accent-2"><h3>University of Kentucky chapter of the ACM-W!</h3>
+		<span class="deep-purple-text"><h3>University of Kentucky chapter of the ACM-W!</h3>
 		</span>
                	<div class="divider"></div>
 		<div class="row">
 		  <div class="col s12 m6">
 		    <div class="vertical-align">
-		      <span class="teal-text text-darken-1"><br><br><br><br><h3>who we are</h3>
+		      <span class="teal-text text-darken-1"><h3>who we are</h3></span>
 		    </div>
    		  </div>
-		  <div class="col s12 m6">
-		    <div class="card-panel teal lighten-5">
-		      <span><p>We are a group of Computer Science/Engineering and Information Technology students and hobbyists. At ACM-W, we are all about creating new projects, cultivating lasting friendships, and sharing ideas with each other.</p>
-		    </span>
-		  </div>
-		</div>
-              	<div class="row">
                   <div class="col s12 m6">
                     <div class="vertical align">
-                      <span class=" teal-text text-darken-1"><br><br><br><br><h3>what we do</h3>
+                      <span class=" teal-text text-darken-1"><h3>what we do</h3></span>
               	    </div>
                   </div>
-                <div class="col s12 m6">
-                  <div class="card-panel teal lighten-5">
-    		    <span><p>Since inception, our focus has been empowering others through technology. Our members have done everything from running coding workshops at local schools to building apps that help feed the homeless and connect students.</p>
-              	    </span>
+                <div class="row">
+                  <div class="col s12 m6">
+                    <div class="card-panel teal lighten-5">
+                      <span><p>We are a group of Computer Science/Engineering and Information Technology students and hobbyists. At ACM-W, we are all about creating new projects, cultivating lasting friendships, and sharing ideas with each other.</p>
+                      </span>
+                    </div>
+		  </div>
+                  <div class="col s12 m6">
+                    <div class="card-panel teal lighten-5">
+    		      <span><p>Since inception, our focus has been empowering others through technology. Our members have done everything from running coding workshops at local schools to building apps that help feed the homeless and connect students.</p>
+              	      </span>
+		    </div>
 		  </div>
 		</div>
 	      </div>
