@@ -41,37 +41,40 @@ if (isset($_POST['login'])) {
 
 <html>
 <head>
-        <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-	<link rel="stylesheet" href="mainstyles.css" type="text/css">
-        <title>Login to the ACM-W Website</title>
+       	<!-- Compiled and minified CSS -->
+    	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+       	<title>Login to the ACM-W Website</title>
 </head>
 <body id="LoginForm">
-        <div class="container">
-        	<h1 class="form-heading"></h1>
-        	<div class="login-form">
-        		<div class="main-div">
-        			<div class="panel">
-        				<h2>Login</h2>
-        				<p>Please enter your information</p>
-        			</div>
-        			<form id="Login" action="login.php" method="post">
-                			<div class="form-group">
-						<input type="text" name="username" class="form-control" placeholder="Username">
-                			</div>
-                			<div class="form-group">
-                				<input type="password" name="password" class="form-control" placeholder="Password">
-                			</div>
-					<?php        
-						foreach ($errors as $error){
-                        				echo $error."\n";
-                				}
-                				echo "\n";
-                			?>
-                			<br><button type="submit" class="btn btn-primary" name="login">Login</button><br>
-					<p>Not yet a member? <a href="register.php">Sign up</a></p>
-				</form>
-			</div>
+       <div class="container">
+         <div class="row valign-wrapper">
+           <div class="col s6 offset-s3 valign">
+             <div class="card deep-purple lighten-2 white-text">
+	       <div class="container">
+                 <div class="card-content center-align">
+           	  <span class="card-title white-text">Login</span>
+        	  <p>Please enter your information</p>
+        	 </div>
+        	 <form id="Login" action="login.php" method="post">
+                  <div class="form-group">
+		    <input type="text" name="username" class="form-control" placeholder="Username">
+                  </div>
+                  <div class="form-group">
+                    <input type="password" name="password" class="form-control" placeholder="Password">
+                  </div>
+		<?php        
+		  foreach ($errors as $error){
+                    echo $error."\n";
+                  }
+                  echo "\n";
+                ?>
+                  <br><button type="submit" class="btn orange lighten-2" name="login">Login</button><br>
+		  <p>Not yet a member? <a href="register.php">Sign up</a></p><br>
+		</form>
 		</div>
-	</div>
+		</div>
+	      </div>
+	    </div>
+          </div>
 </body>
 </html>

@@ -94,20 +94,22 @@ if (isset($_POST['register'])) {
 
 <html>
 <head>
-	<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-	<link rel="stylesheet" href="mainstyles.css" type="text/css">
+	 <!-- Compiled and minified CSS -->
+    	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
  	<title>Register for ACM-W website Access</title>
 </head>
 <body id="LoginForm">
-	<div class="container">
-  	<h1 class="form-heading"></h1>
-	<div class="login-form">
-	<div class="main-div">
-	<div class="panel">
-	<h2>Register</h2>
-	<p>Please enter your information</p>
-	</div>
-	<form id="Login" action="register.php" method="post">
+  <div class="container">
+    <div class="row valign-wrapper">
+      <div class="col s4 valign">
+        <div class="card deep-purple lighten-2 white-text">
+          <div class="container">
+            <div class="card-content center-align">
+              <span class="card-title white-text">Register</span>
+              <p>Please enter your information</p>
+            </div>
+	    <div class="white-text">
+	    <form class="white-text" id="Login" action="register.php" method="post">
 		<div class="form-group">
                 <!--<br><label>SID<label>-->
                 <input type="text" name="sid" class="form-control" placeholder="Student ID">
@@ -193,10 +195,15 @@ if (isset($_POST['register'])) {
 		}
 		echo "\n";
 		?>
-		<br><button type="submit" class="btn btn-primary" name="register">Register</button><br>
-  		Already a member? <a href="login.php">Sign in</a>
-</form>
-</div>
-</div></div></div>
+		<br><button type="submit" class="btn orange lighten-2" name="register">Register</button><br><br>
+  	        Already a member? <a href="login.php">Sign in</a><br><br>
+	      </div>
+	      </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

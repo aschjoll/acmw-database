@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <?php
-  if (isset($_GET['logout'])) {
+session_start();
+
+ if (isset($_GET['logout'])) {
         session_destroy();
         unset($_SESSION['username']);
         header("location: login.php");
@@ -17,7 +19,7 @@
 <ul id="dropdown1" class="dropdown-content">
   <li><a href="profile.php">My Profile</a></li>
   <li class="divider"></li>
-  <li><a href="?logout='1'">Logout</a><li>
+  <li><a href="?logout='1'">Logout</a></li>
 </ul>
   <nav>
     <div class="nav-wrapper deep-purple lighten-2">
@@ -26,9 +28,15 @@
           <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
           <ul class="right hide-on-med-and-down">
             <li><a href="events.php">Events</a></li>
-	    <li><a href="members.php">Members</a><li>
-	    <li><a href="memberStats.php">Member Stats</a><li>
-	    <li><a class="dropdown-trigger" href="#!" data-target="dropdown1">Account<i class="material-icons right">arrow_drop_down</i></a>
+	    <li><a href="members.php">Members</a></li>
+	      <?php  if (isset($_SESSION['username']))
+        	{
+			echo "<li><a href=\"memberStats.php\">Member Stats</a><li>";
+         		echo "<li><a class=\"dropdown-trigger\" href=\"#!\" data-target=\"dropdown1\">Account<i class=\"material-icons right\">arrow_drop_down</i></a>";
+		}
+		else
+			echo"<li><a href=\"login.php\">Login</a></li>";
+	      ?>
           </ul>
       </div>
     </div>
@@ -41,3 +49,12 @@
 <main>
 <body>
 <div class="container">
+
+<?php
+ if (isset($_GET['logout'])) {
+        session_destroy();
+        unset($_SESSION['username']);
+        header("location: login.php");
+  }
+?>
+
