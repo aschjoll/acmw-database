@@ -52,7 +52,7 @@ while ($studentResult = mysqli_fetch_assoc($result2)){
 		$locationid[$eventid] = $row['locationid'];
 		$locationB[$eventid] = $row['buildingRoom'];
 		$locationA[$eventid] = $row['address'];
-		if($row['buildingRoom']==null){
+		if($row['buildingRoom']=="null"){
 			$location[$eventid] = $row['address'];
 		}
 		else{
@@ -69,11 +69,11 @@ while ($studentResult = mysqli_fetch_assoc($result2)){
 		{
 			if ($sid == $RSVPs['sid']){
 				$RSVPEED[$eventid] = true;
+				break;
 			}
 			else{
 				$RSVPEED[$eventid] = false;
 			}
-			break;
 		}
 ?>
 		<div class="row">
@@ -234,7 +234,7 @@ for($j=1; $j<=max($allEventIds); $j++){
                                 echo "ERROR".mysqli_error($conn);
                         }
                 }
-		$RSVPEED = true;
+		$RSVPEED[$eventid] = true;
 		header("events.php");
         }
         $UNRSVP = $_GET['UNRSVP'];
@@ -248,7 +248,7 @@ for($j=1; $j<=max($allEventIds); $j++){
                                 echo "ERROR".mysqli_error($conn);
                         }
                 }
-                $RSVPEED = false;
+                $RSVPEED[$eventid] = false;
 		header("events.php");
         }
 
