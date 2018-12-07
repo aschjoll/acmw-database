@@ -1,15 +1,12 @@
 <?php
-
 //inspired by http://codewithawa.com/posts/complete-user-registration-system-using-php-and-mysql-database
 //css from https://bootsnipp.com/snippets/ZXz3x 
 include('config.php');
 session_start();
-
 $sid = "";
 $user = "";
 $email = "";
 $errors = array(); 
-
 if (isset($_POST['register'])) {
   $sid = (int)$_POST['sid'];
   $fname = $_POST['fname'];
@@ -24,14 +21,12 @@ if (isset($_POST['register'])) {
   $race = $_POST['race'];
   $major = $_POST['major'];
   $hispanic = $_POST['hispanic'];
-
   if (empty($sid) || empty($fname) || empty($lname) || empty($user) || empty($email) || empty($pass1) || empty($pass2) || empty($gpa) || empty($gender) || empty($year) || empty($race) || empty($hispanic) || empty($major)) {
 	array_push($errors, "All fields are required"); 
   }
   if ($pass1 != $pass2) {
 	array_push($errors, "The two passwords do not match");
   }
-
   $student_check_query = "SELECT * FROM student WHERE username='$user' OR email='$email' OR sid='$sid' LIMIT 1";
   $result = mysqli_query($conn, $user_check_query);
   $student = mysqli_fetch_assoc($result);
@@ -47,7 +42,6 @@ if (isset($_POST['register'])) {
       array_push($errors, "email already exists");
     }
   }
-
   if (count($errors) == 0) {
         if($hispanic == "Hispanic"){
                 $hispanic=1;
@@ -75,14 +69,11 @@ if (isset($_POST['register'])) {
         while($majorids = mysqli_fetch_assoc($majoridResult)){
                 $majorid = $majorids["majorid"];
         }
-
   	$password = md5($pass1);
-
   	$query = "INSERT INTO student (sid, username, password, fname, lname, email, gpa, ismember, genderid, yearid, raceid, officerid, majorid)
   		VALUES($sid, '$user', '$password', '$fname', '$lname', '$email', $gpa, 0, $genderid, $yearid, $raceid, 6, $majorid)";
 	echo $query;
   	mysqli_query($conn, $query);
-
   	$_SESSION['username'] = $user;
   	$_SESSION['success'] = "You are now logged in";
   	header('location: welcome.php');
@@ -195,7 +186,7 @@ if (isset($_POST['register'])) {
 		}
 		echo "\n";
 		?>
-		<br><button type="submit" class="btn orange lighten-2" name="register">Register</button><br><br>
+		<br><button type="submit" class="btn blue-grey" name="register">Register</button><br><br>
   	        Already a member? <a href="login.php">Sign in</a><br><br>
 	      </div>
 	      </form>

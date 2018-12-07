@@ -68,7 +68,7 @@ if (isset($_POST['login'])) {
                   }
                   echo "\n";
                 ?>
-                  <br><button type="submit" class="btn orange lighten-2" name="login">Login</button><br>
+                  <br><button type="submit" class="btn orange blue-grey" name="login">Login</button><br>
 		  <p>Not yet a member? <a href="register.php">Sign up</a></p><br>
 		</form>
 		</div>
