@@ -1,3 +1,3 @@
-6789	AI Rationalization	Dr. Harrison
-2345	Databases	1
-4567	CS	2
+6789	AI Rationalization	Dr. Harrison	Giving AI human rationale
+2345	Time Travel	Doc Brown	Flux Capcitor
+4567	Yams	2Chainz	In the kitchen, yams everywhere

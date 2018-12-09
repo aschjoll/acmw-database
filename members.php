@@ -13,6 +13,7 @@ $result = $conn->query($sql);
 
 <?php   
 $allSIDs = array();
+echo "POO";
 if ($result->num_rows > 0) {
         $i = 0;
         // output data of each row
@@ -20,6 +21,15 @@ if ($result->num_rows > 0) {
 	{
 		$row = mysqli_fetch_assoc($result);
 		$sid = $row['sid'];
+		$researchQuery = "SELECT * FROM research WHERE sid = $sid";
+		echo $researchQuery;
+                if(!$researchResult = mysqli_query($conn, $researchQuery){
+                        echo mysqli_error($conn);
+                }
+        	$companyQuery = "SELECT * FROM company WHERE sid = $sid";
+		if(!$companyResult = mysqli_query($conn, $companyQuery){
+			echo mysqli_error($conn);
+		}
 		$fname[$sid] = $row['fname'];
 		$lname[$sid] = $row['lname'];
 		$fullName = $fname[$sid].' '.$lname[$sid];
@@ -31,18 +41,13 @@ if ($result->num_rows > 0) {
 		$major[$sid] = $row['major'];
 	
 		array_push($allSIDs, $sid);
-		$researchQuery = "SELECT * FROM reserach WHERE sid = $sid";
-		$researchResult = mysqli_query($conn, $researchQuery);
-		while ($researchRow = mysqli_fetch_assoc($researchResult))
-		{
-			echo "Research Topic: ".$researchRow['topic'];
-			echo "Description: ".$companyRow['description'];
-		}
 ?>
 		<div class="row">
 		  <div class="col s12">
 		    <div class="card-panel white">
 		      <span class="blue-grey-text text-darken-3">
+                          <h5>General Information</h5>
+
 		        <h4><?php echo $fullName?></h4>
 		        <div class="divider blue-grey darken-3"></div>
 		          <h6><?php echo $major[$sid]?></h6>
@@ -52,6 +57,29 @@ if ($result->num_rows > 0) {
 			    		echo "<h6>".$officerTitle[$sid]."</h6>";
 			   } ?>
 			  <h6><?php echo $email[$sid]?></h6>
+<?php
+                while ($researchRow = mysqli_fetch_assoc($researchResult))
+                {
+                        $researchTopic = $researchRow['topic'];
+                        $researchMent = $researchRow['professor'];
+                        $researchDesc = $researchRow['description'];
+                        echo "<br><div class=\"divider blue-grey darken-3\"></div>";
+                        echo "<h5>Research"."<br>";
+                        echo "<h6>Research Topic: ".$researchRow['topic']."</h6>";
+                        echo "<h6>Research Mentor: ".$researchRow['professor']."</h6>";
+                        echo "<h6>Description: ".$researchRow['description']."</h6>";
+
+                while ($companyRow = mysqli_fetch_assoc($companyResult))
+                {
+                        $companyName = $companyRow['company'];
+                        $companyPos = $companyRow['position'];
+                        $companyDesc = $companyRow['description'];
+                        echo "<br><div class=\"divider blue-grey darken-3\"></div>";
+                        echo "<h5>Professional Experience"."<br>";
+                        echo "<h6>Company: ".$companyRow['company']."</h6>";
+                        echo "<h6>Position: ".$companyRow['position']."</h6>";
+                        echo "<h6>Description: ".$companyRow['description']."</h6>";
+                }?>
 			</div>
 		      </span>
 		    </div>

@@ -1,3 +1,3 @@
-6789	BlueFrame	Software Develeopment Intern
-4567	Zudy	Application Development Intern
-5678	CS Dept	IT Intern
+6789	BlueFrame	Software Developement Intern	App developement
+4567	Zudy	Application Development Intern	App Developement
+5678	CS Dept	IT Intern	Turn it off then on again
